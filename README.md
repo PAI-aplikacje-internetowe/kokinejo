@@ -24,6 +24,14 @@ Nasza aplikacja ma na celu zapewnić dostęp do gier wieloosobowych, dzięki kt�
 ## Wymagania systemowe i funkcjonalne
 [max. 2str. A4 ] Ogólny  opis  wymagań  systemowych  oraz  model  proponowanej  aplikacji.  W tym punkcie  należy  określić  szczegółowe  wymagania  funkcjonalne  projektu/aplikacji, wymagania  techniczne,  wymagania  dotyczące  baz  danych  i  sposobu  utrwalania informacji. Model architektury.   
 
+- opis co system robi
+- system tworzony od podstaw
+- wymagania funkcje / moduły
+- wymagania techniczne - na jakich urządzeniach / systemach / w jakim środowisku ma działać system
+- wymagania dot. baz danych i sposobu utrwalania informacji
+- model architektury
+- z jakimi zewnętrznymi narzędziami zintegrowany
+
 
 ## Harmonogram prac i zespół projektowy
 
