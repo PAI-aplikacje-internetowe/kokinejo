@@ -35,14 +35,21 @@ Nasza aplikacja ma na celu zapewnić dostęp do gier wieloosobowych, dzięki kt�
 
 ## Harmonogram prac i zespół projektowy
 
+DO 24.05
 
+ max. 1str. A4 ] Należy przygotować szczegółowy harmonogram pracy z podziałem na główne etapy, które doprowadzą do realizacji określonego celu biznesowego.W kolejnych etapach należy   wyodrębnić zadania,   którezwiązane   są   z   realizacją   określonych funkcjonalności. Na koniec każdego etapu należy określić jeden„kamień milowy (efekt końcowy)”,  który powinien  być  sparametryzowany  pozwalający  na  ocenę  czy  dany etap zakończył się sukcesem. Dla każdego zadania należy określić (wycenić), czas jego realizacji. W tym punkcie należy również określić które zadania będą wykonywane przez danego członka zespołu. 
 
 ## Analiza zagadnienia i jego modelowanie
 
+DO 24.05
+
+[ max. 2str. A4 ] Należy określić modele aplikacji wynikające przeprowadzonej analizy funkcjonalnej i biznesowejnp.:  -metody obiektowe: diagramy klas, diagramy interakcji obiektów, -definicje:  klas,  pól  danych  złożonych  i  elementarnych oraz  metod-metody strukturalne:  diagramy  związków  encji  (dla  baz  danych),  diagram,  przepływów danych, diagramy przejść,  -definicje:  encji,  atrybutów, procesów,przepływów  danych,  danych  złożonych  i elementarnych.  
 
 
 ## Implementacja i testowanie
 
-
+Do  dnia07.06(najpóźniej) przygotowanie  wstępnych  elementów implementacjii umieszczenie ich w repozytorium GitHub. 
 
 ## Podsumowanie
+
+Do dnia 30.06zakończenie prac nad aplikacją i prezentacja.
