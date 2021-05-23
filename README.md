@@ -81,9 +81,9 @@ Pozwoli to także łatwo przełączyć serwer na osobną bazę SQL, w przypadku 
 
     Zadanie | Czas realizacji
     --------|----------------
-    gra „Człowieku nie irytuj się” | 30h
-    gra „statki” | 30h
-    gra „pasjans” | 25h
+    gra "crazy eight" | 30h
+    gra "oczko" | 30h
+    gra pasjans "Solitaire" | 25h
     ... | ...h
 
     _Data_: 29.06.21
@@ -92,9 +92,148 @@ Pozwoli to także łatwo przełączyć serwer na osobną bazę SQL, w przypadku 
 
 ## Analiza zagadnienia i jego modelowanie
 
-DO 24.05
+### Schemat bazy danych
 
-[ max. 2str. A4 ] Należy określić modele aplikacji wynikające przeprowadzonej analizy funkcjonalnej i biznesowejnp.:  -metody obiektowe: diagramy klas, diagramy interakcji obiektów, -definicje:  klas,  pól  danych  złożonych  i  elementarnych oraz  metod-metody strukturalne:  diagramy  związków  encji  (dla  baz  danych),  diagram,  przepływów danych, diagramy przejść,  -definicje:  encji,  atrybutów, procesów,przepływów  danych,  danych  złożonych  i elementarnych.
+![Schemat bazy danych](db_schema.png)
+
+### Przepływ danych
+
+Przepływ danych opiera się o komunikację REST.
+Każda gra będzie miała swój prefix w url, np. `/oczko`
+
+#### POST `/login`
+
+Żądanie
+
+```json
+{
+    "name": "nazwa",
+    "password": "hasło"
+}
+```
+
+Odpowiedź
+
+```json
+{
+    "status": "ok",
+    "token": "token"
+}
+```
+
+#### POST `/signup`
+
+Żądanie
+
+```json
+{
+    "name": "nazwa",
+    "password": "hasło"
+}
+```
+
+Odpowiedź
+
+```json
+{
+    "status": "ok",
+    "token": "token"
+}
+```
+
+#### GET `/logout`
+
+Odpowiedź
+
+```json
+{
+    "status": "ok"
+}
+```
+
+Endpointy dla gier
+
+#### GET `/<prefix>/available_games`
+
+Odpowiedź
+
+```json
+{
+    "status": "ok",
+    "games_ids": [
+        1, 2, ...
+    ]
+}
+```
+
+#### GET `/<prefix>/:id/join`
+
+Odpowiedź
+
+```json
+{
+    "status": "ok",
+    "game_state": {
+        // stan gry
+    }
+}
+```
+
+#### GET `/<prefix>/:id/leave`
+
+Odpowiedź
+
+```json
+{
+    "status": "ok"
+}
+```
+
+#### GET `/<prefix>/:id/ready`
+
+Odpowiedź
+
+```json
+{
+    "status": "ok"
+}
+```
+
+#### GET `/<prefix>/:id/state`
+
+Odpowiedź
+
+```json
+{
+    "status": "ok",
+    "game_state": {
+        // stan gry
+    }
+}
+```
+
+#### POST `/<prefix>/:id/make_move`
+
+Żądanie
+
+```json
+{
+    "move": {
+        // zależne od gry
+    }
+}
+```
+
+Odpowiedź
+
+```json
+{
+    "status": "ok",
+    "game_state": {
+        // stan gry
+    }
+}
+```
 
 ## Implementacja i testowanie
 
