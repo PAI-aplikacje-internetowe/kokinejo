@@ -44,10 +44,9 @@ Pozwoli to także łatwo przełączyć serwer na osobną bazę SQL, w przypadku 
 
 1. Stworzenie dokumentacji projektu na potrzeby implementacji
 
-    Zadanie | Czas realizacji
-    --------|----------------
-    spisanie i opisanie pełnej funkcjonalności projektu        | 10h
-    stworzenie przypadków użycia                               | 10h
+    Zadanie | Czas realizacji | Osoba odpowiedzialna
+    --------|---------------- | --
+    spisanie i opisanie pełnej funkcjonalności projektu        | 2h | spotkanie (23.05)
 
     _Data_: 30.05.21
 
@@ -55,11 +54,11 @@ Pozwoli to także łatwo przełączyć serwer na osobną bazę SQL, w przypadku 
 
 2. Stworzenie backendu aplikacji
 
-    Zadanie | Czas realizacji
-    --------|----------------
-    szkielet backendu (utworzenie projektu, połączenie z bazą) | 10h
-    autentykacja użytkowników                                  | 4h
-    stworzenie testowego modułu (kółko i krzyżyk)              | 5h
+    Zadanie | Czas realizacji | Osoba odpowiedzialna
+    --------|----------------| ---
+    szkielet backendu (utworzenie projektu, połączenie z bazą) | 5h | Wojciech
+    autentykacja użytkowników                                  | 4h | Jarosław
+    stworzenie testowego modułu (kółko i krzyżyk)              | 4h | Wojciech
 
     _Data_: 07.06.21
 
@@ -67,11 +66,12 @@ Pozwoli to także łatwo przełączyć serwer na osobną bazę SQL, w przypadku 
 
 3. Stworzenie frontendu aplikacji zawierającego podstawową funkcjonalność (bez gier)
 
-    Zadanie | Czas realizacji
-    --------|----------------
-    szkielet frontendu (utworzenie projektu, połączenie z backendem) | 10h
-    utworzenie ekranów logowania/rejestracji                         | 5h
-    stworzenie testowego modułu (kółko i krzyżyk)                    | 5h
+    Zadanie | Czas realizacji | Osoba odpowiedzialna
+    --------|----------------| ---
+    szkielet frontendu (utworzenie projektu, połączenie z backendem) | 5h | Aleksandra
+    utworzenie ekranów logowania/rejestracji                         | 2h | Jarosław
+    stworzenie testowego modułu (kółko i krzyżyk)                    | 4h | Aleksandra
+    interfejs dla gier karcianych                                    | 3h | Jarosław
 
     _Data_: 07.06.21
 
@@ -79,11 +79,11 @@ Pozwoli to także łatwo przełączyć serwer na osobną bazę SQL, w przypadku 
 
 4. Dodanie gier do istniejącej części aplikacji
 
-    Zadanie | Czas realizacji
-    --------|----------------
-    gra "crazy eight" | 30h
-    gra "oczko" | 30h
-    gra pasjans "Solitaire" | 25h
+    Zadanie | Czas realizacji | Osoba odpowiedzialna
+    --------|-----------------|---
+    gra "crazy eight"       | 30h | Wojciech
+    gra "oczko"             | 30h | Jarosław
+    gra pasjans "Solitaire" | 25h | Aleksandra
     ... | ...h
 
     _Data_: 29.06.21
