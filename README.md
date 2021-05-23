@@ -56,9 +56,24 @@ DO 24.05
     EFEKT KOŃCOWY: 
     Będzie stworzona pełna dokumentacja projektu, okreslająca dokładnie funkcjonalność jaką należy zaimplementować i w jaki sposób ma działać.
 
-2. Backend
-3. Frontend (taki ogólny funkcjonalnośc bez gier)
-4. Dodawanie gier i łączenie tego 
+2. Stworzenie backendu aplikacji
+  - 
+
+    DATA:
+
+    EFEKT KOŃCOWY:
+
+3. Stworzenie frontendu aplikacji zawierającego podstawową funkcjonalność (bez gier)
+
+    DATA:
+    
+    EFEKT KOŃCOWY:
+
+4. Dodanie gier do istniejącej części aplikacji
+
+    DATA:
+    
+    EFEKT KOŃCOWY
 
 ## Analiza zagadnienia i jego modelowanie
 
