@@ -14,9 +14,9 @@ Nasza aplikacja ma na celu zapewnić dostęp do gier wieloosobowych, dzięki kt�
 
 ![image](https://user-images.githubusercontent.com/50954577/117581931-e2041700-b0ff-11eb-9da1-9dd7cdec69be.png)
 
-(źródło: https://www.similarweb.com/website/kurnik.pl/)
+(źródło: [similarweb.com](https://www.similarweb.com/website/kurnik.pl/))
 
-### CELE:
+### CELE
 
 1. Stworzenie platformy umożliwiającej spedzanie czasu ze znajomymi lub osobami tam poznanymi.
 2. Implementacja kilku podstawowych, znanych gier wieloosobowych.
@@ -42,38 +42,53 @@ Pozwoli to także łatwo przełączyć serwer na osobną bazę SQL, w przypadku 
 
 ## Harmonogram prac i zespół projektowy
 
-DO 24.05
-
-[ max. 1str. A4 ] Należy przygotować szczegółowy harmonogram pracy z podziałem na główne etapy, które doprowadzą do realizacji określonego celu biznesowego.W kolejnych etapach należy   wyodrębnić zadania,   którezwiązane   są   z   realizacją   określonych funkcjonalności. Na koniec każdego etapu należy określić jeden„kamień milowy (efekt końcowy)”,  który powinien  być  sparametryzowany  pozwalający  na  ocenę  czy  dany etap zakończył się sukcesem. Dla każdego zadania należy określić (wycenić), czas jego realizacji. W tym punkcie należy również określić które zadania będą wykonywane przez danego członka zespołu.
-
 1. Stworzenie dokumentacji projektu na potrzeby implementacji
-  - spisanie i opisanie pełnej funkcjonalności projektu           (czas realizacji: )
-  - stworzenie przypadków testowych dla każdej funkcjonalności    (czas realizacji: )
-  - stworzenie mockup-ów dla projektu                             (czas realizacji: )
 
-    DATA: 
-    
-    EFEKT KOŃCOWY: 
-    Będzie stworzona pełna dokumentacja projektu, okreslająca dokładnie funkcjonalność jaką należy zaimplementować i w jaki sposób ma działać.
+    Zadanie | Czas realizacji
+    --------|----------------
+    spisanie i opisanie pełnej funkcjonalności projektu        | 10h
+    stworzenie przypadków użycia                               | 10h
+
+    _Data_: 30.05.21
+
+    _Efekt końcowy_: Będzie stworzona pełna dokumentacja projektu, okreslająca dokładnie funkcjonalność jaką należy zaimplementować i w jaki sposób ma działać.
 
 2. Stworzenie backendu aplikacji
-  - 
 
-    DATA:
+    Zadanie | Czas realizacji
+    --------|----------------
+    szkielet backendu (utworzenie projektu, połączenie z bazą) | 10h
+    autentykacja użytkowników                                  | 4h
+    stworzenie testowego modułu (kółko i krzyżyk)              | 5h
 
-    EFEKT KOŃCOWY:
+    _Data_: 07.06.21
+
+    _Efekt końcowy_: Będzie utworzony szkielet aplikacji backendowej, do którego będą w przyszłości dołączane kolejne moduły z grami.
 
 3. Stworzenie frontendu aplikacji zawierającego podstawową funkcjonalność (bez gier)
 
-    DATA:
-    
-    EFEKT KOŃCOWY:
+    Zadanie | Czas realizacji
+    --------|----------------
+    szkielet frontendu (utworzenie projektu, połączenie z backendem) | 10h
+    utworzenie ekranów logowania/rejestracji                         | 5h
+    stworzenie testowego modułu (kółko i krzyżyk)                    | 5h
+
+    _Data_: 07.06.21
+
+    _Efekt końcowy_: Będzie utworzony szkielet aplikacji frontendowej, ekran rejestracji/logowania. Szkielet będzie rozszerzany o kolejne moduły z grami.
 
 4. Dodanie gier do istniejącej części aplikacji
 
-    DATA:
-    
-    EFEKT KOŃCOWY
+    Zadanie | Czas realizacji
+    --------|----------------
+    gra „Człowieku nie irytuj się” | 30h
+    gra „statki” | 30h
+    gra „pasjans” | 25h
+    ... | ...h
+
+    _Data_: 29.06.21
+
+    _Efekt końcowy_: Można grać w gry
 
 ## Analiza zagadnienia i jego modelowanie
 
