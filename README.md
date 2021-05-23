@@ -46,6 +46,13 @@ DO 24.05
 
 [ max. 1str. A4 ] Należy przygotować szczegółowy harmonogram pracy z podziałem na główne etapy, które doprowadzą do realizacji określonego celu biznesowego.W kolejnych etapach należy   wyodrębnić zadania,   którezwiązane   są   z   realizacją   określonych funkcjonalności. Na koniec każdego etapu należy określić jeden„kamień milowy (efekt końcowy)”,  który powinien  być  sparametryzowany  pozwalający  na  ocenę  czy  dany etap zakończył się sukcesem. Dla każdego zadania należy określić (wycenić), czas jego realizacji. W tym punkcie należy również określić które zadania będą wykonywane przez danego członka zespołu.
 
+1. Spis funkcjonalności i przypadków testowych itp
+2. Mockupy (o ile to robimy)
+3. Backend
+4. Frontend (taki ogólny funkcjonalnośc bez gier)
+5. Dodawanie gier i łączenie tego 
+
+
 ## Analiza zagadnienia i jego modelowanie
 
 DO 24.05
