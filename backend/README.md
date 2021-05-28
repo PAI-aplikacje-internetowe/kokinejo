@@ -6,7 +6,7 @@
 
 ## Running
 
-`npm start` to start the application.
+`./run.sh` in the main directory - it creates database 
 
 ## Useful resources
 
