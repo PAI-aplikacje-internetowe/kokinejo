@@ -12,6 +12,15 @@ CREATE TABLE tokens
     token   string
 );
 
+CREATE TABLE kik
+(
+    id       integer PRIMARY KEY AUTOINCREMENT,
+    state    string,
+    user1_id integer,
+    user2_id integer,
+    joinable boolean
+);
+
 CREATE TABLE solitaire
 (
     id       integer PRIMARY KEY AUTOINCREMENT,
