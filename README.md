@@ -160,7 +160,7 @@ Odpowiedź
 ```json
 {
     "status": "ok",
-    "games_ids": [
+    "gamesIds": [
         1, 2, ...
     ]
 }
@@ -173,7 +173,7 @@ Odpowiedź
 ```json
 {
     "status": "ok",
-    "game_state": {
+    "gameState": {
         // stan gry
     }
 }
@@ -206,7 +206,7 @@ Odpowiedź
 ```json
 {
     "status": "ok",
-    "game_state": {
+    "gameState": {
         // stan gry
     }
 }
@@ -229,7 +229,7 @@ Odpowiedź
 ```json
 {
     "status": "ok",
-    "game_state": {
+    "gameState": {
         // stan gry
     }
 }
