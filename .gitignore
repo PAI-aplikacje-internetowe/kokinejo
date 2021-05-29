@@ -1,7 +1,7 @@
 # This is generated, slightly modified .gitignore file
 # Probably there are unnecessary entries, but time is precious, spend it wisely :)
 
-database.db
+backend/database.db
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,webstorm,intellij
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,webstorm,intellij
