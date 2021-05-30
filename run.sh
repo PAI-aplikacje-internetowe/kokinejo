@@ -19,11 +19,11 @@ usage() {
 }
 
 createDbIfMissing() {
-  echo "Creating database $DB_PATH..."
   if [ ! -f "$DB_PATH" ]; then
+    echo "Creating database $DB_PATH..."
     cat "$DB_SCHEMA_PATH" | sqlite3 "$DB_PATH"
+    echo "Database $DB_PATH created"
   fi
-  echo "Database $DB_PATH created"
 }
 
 _clear() {
