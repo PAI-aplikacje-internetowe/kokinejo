@@ -7,7 +7,8 @@ const bodyParser = require('body-parser');
 const indexRouter = require('./routes/index');
 const signupRouter = require('./routes/signup');
 
-const kikGame = require('./games/kik');
+const kikGame = require('./games/kik/kik');
+const kikUtils = require("./games/kik/utils");
 
 const app = express();
 
@@ -24,9 +25,11 @@ app.use('/static', express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/signup', signupRouter);
 
-// games
+// games routing
 app.use('/kik', kikGame);
 
+// games initialization
+kikUtils.init();
 
 app.use((req, res) => {
     res.status(404);
