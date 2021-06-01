@@ -160,8 +160,16 @@ Odpowiedź
 ```json
 {
     "status": "ok",
-    "gamesIds": [
-        1, 2, ...
+    "availableGames": [
+       {
+          "id": 1, 
+          "userIds": [1, 2, ...]
+       },
+       {
+          "id": 2,
+          "userIds": [4, null, ...]
+       },
+      ...
     ]
 }
 ```

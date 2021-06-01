@@ -38,8 +38,18 @@ Odpowiedź
 {
   "status": "ok",
   "game_state": {
+    "started": true,
     "currentPlayer": "id gracza który ma wykonać ruch",
-    "players": ["id gracza 1", "id gracza 2"],
+    "players": [
+      {
+        "id": 1,
+        "ready": true
+      },
+      {
+        "id": 2,
+        "ready": false
+      }
+    ],
     "board": [
       [0, 1, 2],
       [0, 0, 0],
