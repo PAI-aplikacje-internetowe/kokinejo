@@ -30,22 +30,20 @@ router.post('/', (req, res) => {
         password: hashPassword(req.body.password)
     };
 
-    const stmt = 'INSERT INTO users (name, password_hash) VALUES (?, ?)'
-    const params = [data.name, data.password]
-
-    // jako callback nie może być funkcji strzałkowej - z powodu dostępu do `this`
-    db.run(stmt, params, function (err, _) {
-        if (err) {
-            res.status(400).json({"error": err.message})
-            console.debug("ERROR EOEO");
-            return;
-        }
+    const stmt = db.prepare('INSERT INTO users (name, password_hash) VALUES (?, ?)');
+    const params = [data.name, data.password];
+    try {
+        const info = stmt.run(...params);
         res.json({
-            "message": "success",
-            "data": data,
-            "id": this.lastID
+            message: "success",
+            id: info.lastInsertRowid
         })
-    });
+    } catch (e) {
+        console.error(e);
+        res.status(400).json({
+            error: e.message
+        })
+    }
 });
 
 module.exports = router;

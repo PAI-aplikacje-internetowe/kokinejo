@@ -1,14 +1,7 @@
-const sqlite3 = require('sqlite3').verbose();
+const Database = require('better-sqlite3');
 
 const DB_SOURCE = "./database.db";
 
-const db = new sqlite3.Database(DB_SOURCE, (err) => {
-    if (err) {
-        console.error("Can' open database");
-        console.error(JSON.stringify(err));
-    } else {
-        console.debug("Connected to SQLite database");
-    }
-});
+const db = new Database(DB_SOURCE, {verbose: console.debug});
 
 module.exports = db;
