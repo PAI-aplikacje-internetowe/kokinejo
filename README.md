@@ -160,8 +160,16 @@ Odpowiedź
 ```json
 {
     "status": "ok",
-    "gamesIds": [
-        1, 2, ...
+    "availableGames": [
+       {
+          "id": 1, 
+          "userIds": [1, 2, ...]
+       },
+       {
+          "id": 2,
+          "userIds": [4, null, ...]
+       },
+      ...
     ]
 }
 ```
@@ -173,6 +181,7 @@ Odpowiedź
 ```json
 {
     "status": "ok",
+    "userIds": [1, 2],
     "gameState": {
         // stan gry
     }
@@ -205,10 +214,13 @@ Odpowiedź
 
 ```json
 {
-    "status": "ok",
-    "gameState": {
-        // stan gry
-    }
+   "status": "ok",
+   "userIds": [1, 2],
+   "gameState": {
+      "started": false,
+      "currentPlayer": null,
+      // inne dane specyficzne dla gier
+   }
 }
 ```
 
@@ -229,6 +241,7 @@ Odpowiedź
 ```json
 {
     "status": "ok",
+    "userIds": [1, 2],
     "gameState": {
         // stan gry
     }
