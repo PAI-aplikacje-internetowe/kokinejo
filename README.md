@@ -181,6 +181,7 @@ Odpowiedź
 ```json
 {
     "status": "ok",
+    "userIds": [1, 2],
     "gameState": {
         // stan gry
     }
@@ -213,10 +214,13 @@ Odpowiedź
 
 ```json
 {
-    "status": "ok",
-    "gameState": {
-        // stan gry
-    }
+   "status": "ok",
+   "userIds": [1, 2],
+   "gameState": {
+      "started": false,
+      "currentPlayer": null,
+      // inne dane specyficzne dla gier
+   }
 }
 ```
 
@@ -237,6 +241,7 @@ Odpowiedź
 ```json
 {
     "status": "ok",
+    "userIds": [1, 2],
     "gameState": {
         // stan gry
     }
