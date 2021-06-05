@@ -5,7 +5,9 @@ const config = require('../config');
 
 /**
  * Helper function for sending bad request (400) with error message
- * Value of optional parameter 'info' will be logged
+ * Value of optional parameter 'info' will be logged.
+ * Be careful - when using badRequest, remember to return from routing function,
+ * check for example in 'kik.js'
  */
 function badRequest(res, err, info = undefined) {
     let errMessage = err.message || "Unknown error";

@@ -25,36 +25,34 @@ Przykład: wykonanie ruchu przez gracza z symbolem "x" na środkowym polu:
 ```json
 {
   "playerId": "id gracza wykonującego ruch",
-  "move": {
-    "x": 1,
-    "y": 1
-  }
+  "move": 6
 }
 ```
 
-Odpowiedź
+Odpowiedź - bez wygranej
 
 ```json
 {
   "status": "ok",
-  "game_state": {
+  "winner": null,
+  "gameState": {
     "started": true,
     "currentPlayer": "id gracza który ma wykonać ruch",
-    "players": [
-      {
-        "id": 1,
-        "ready": true
-      },
-      {
-        "id": 2,
-        "ready": false
-      }
-    ],
-    "board": [
-      [0, 1, 2],
-      [0, 0, 0],
-      [2, 0, 1]
-    ]
+    "board": [0, 1, 2, 0, 0, 0, 2, 0, 1]
+  }
+}
+```
+
+Odpowiedź - po wygrywającym ruchu
+
+```json
+{
+  "status": "ok",
+  "winner": "id wygranego gracza",
+  "gameState": {
+    "started": false,
+    "currentPlayer": null,
+    "board": [0, 1, 2, 0, 0, 0, 2, 0, 1]
   }
 }
 ```
@@ -62,18 +60,30 @@ Odpowiedź
 | Wartość `board` | symbol |
 |-----------------|--------|
 |        0        |   -    |
-|        1        |  "o"   |
-|        2        |  "x"   |
+|        1        |  "x"   |
+|        2        |  "o"   |
 
 Co odpowiada poniższemu stanowi rozgrywki:
 
 ```
-    +---+---+---+
-    |   | o | x |
-    +---+---+---+
- ^  |   |   |   |
- |  +---+---+---+
- |  | x |   | o |
- y  +---+---+---+
-     x ---->
+  +---+---+---+
+  |   | x | o |
+  +---+---+---+
+  |   |   |   |
+  +---+---+---+
+  | o |   | x |
+  +---+---+---+
 ```
+
+Indeksy pól
+
+```
+  +---+---+---+
+  | 0 | 1 | 2 |
+  +---+---+---+
+  | 3 | 4 | 5 |
+  +---+---+---+
+  | 6 | 7 | 8 |
+  +---+---+---+
+```
+

@@ -4,22 +4,26 @@ let instances = new Map();
 
 const gameInfo = {
     'tic-tac-toe': {
-        playerCount: 2,
+        minPlayers: 2,
+        maxPlayers: 2,
         tableName: 'kik',
         emptyState: emptyStates.kik
     },
     'crazy-eight': {
-        playerCount: 4,
+        minPlayers: 2,
+        maxPlayers: 4,
         tableName: 'crazy_eight',
         emptyState: emptyStates.crazyEight
     },
     'solitaire': {
-        playerCount: 1,
+        minPlayers: 1,
+        maxPlayers: 1,
         tableName: 'solitaire',
         emptyState: emptyStates.solitaire
     },
     'oczko': {
-        playerCount: 4,
+        minPlayers: 2,
+        maxPlayers: 4,
         tableName: 'oczko',
         emptyState: emptyStates.oczko
     }
@@ -40,12 +44,13 @@ function gameUtilsFactory(gameName) {
     const info = gameInfo[gameName];
 
     let gameUtils = {
-        playerCount: info.playerCount,
+        minPlayers: info.minPlayers,
+        maxPlayers: info.maxPlayers,
         tableName: info.tableName,
         gameName: gameName,
         initialized: false,
         init: init,
-        getState: getState,
+        data: data,
         setState: setState,
         availableGames: availableGames,
         joinGame: joinGame,
@@ -55,7 +60,7 @@ function gameUtilsFactory(gameName) {
 
     let userIdFieldsName = [];
     let userIdPlaceholders = []
-    for (let i = 1; i <= info.playerCount; i++) {
+    for (let i = 1; i <= info.maxPlayers; i++) {
         userIdFieldsName.push(`user${i}_id`);
         userIdPlaceholders.push('null');
     }
@@ -102,37 +107,28 @@ function gameUtilsFactory(gameName) {
         }
     }
 
-    function getState(gameId) {
+    function data(gameId) {
         const row = getRow(gameId);
         return {
-            status: "ok",
             userIds: row.userIds,
             gameState: row.gameState
         }
     }
 
     function setState(gameId, newState) {
-        let oldState = getState(gameId);
+        let oldState = data(gameId);
         let newStateString = newState instanceof Object ? JSON.stringify(newState) : newState;
         const stmt = db.prepare(`UPDATE ${gameUtils.tableName} SET state = ? WHERE id = ?`);
         const info = stmt.run(newStateString, gameId);
         console.debug(`${gameUtils.gameName}, set state, changed ${info.changes} rows`);
     }
 
-    // TODO: co ma robić ready, patrz 'kik.js'
-    function ready(gameId, playerId) {
+    function ready(gameId) {
         const row = getRow(gameId);
 
-        // każdy osobno
-        // if (playerId < 1) {
-        //     throw Error("Wrong user id");
-        // }
-        // if (!row.userIds.includes(playerId)) {
-        //     throw Error(`User ${playerId} is not present in ${gameUtils.gameName}:${gameId}`);
-        // }
         const playersInGame = row.userIds.reduceRight((acc, u) => u != null ? acc+1 : acc, 0)
-        if (playersInGame !== gameUtils.playerCount) {
-            throw Error(`Not enough players: ${playersInGame}/${gameUtils.playerCount} in ${gameUtils.gameName}:${gameId}`);
+        if (playersInGame !== gameUtils.minPlayers) {
+            throw Error(`Not enough players: ${playersInGame}/${gameUtils.minPlayers} in ${gameUtils.gameName}:${gameId}`);
         }
 
         const oldGameState = row.gameState;
@@ -140,9 +136,10 @@ function gameUtilsFactory(gameName) {
             throw Error(`${gameUtils.gameName}:${gameId} already started`);
         }
         let newState = JSON.parse(JSON.stringify(oldGameState));
+        newState.currentPlayer = row.userIds[0];
         newState.started = true;
         gameUtils.setState(gameId, newState);
-        return getState(gameId);
+        return data(gameId);
     }
 
     function joinGame(gameId, playerId) {
@@ -158,7 +155,7 @@ function gameUtilsFactory(gameName) {
         }
 
         const freeSeat = row.userIds.indexOf(null) + 1;
-        if (row.userIds.indexOf(null, freeSeat) === -1) {
+        if (!hasFreeSeats(row.userIds)) {
             setJoinabale(false, gameId);
         }
 
@@ -173,6 +170,10 @@ function gameUtilsFactory(gameName) {
             userIds: newRow.userIds,
             gameState: newRow.gameState
         }
+    }
+
+    function hasFreeSeats(usersArray) {
+        return usersArray.indexOf(null) !== -1;
     }
 
     function leaveGame(gameId, playerId) {
@@ -218,7 +219,7 @@ function gameUtilsFactory(gameName) {
         const rows = stmt.all();
         return rows.map(row => {
             let userIds = [];
-            for (let i = 1; i <= gameUtils.playerCount; i++) {
+            for (let i = 1; i <= gameUtils.maxPlayers; i++) {
                 let key = `user${i}_id`;
                 if (row.hasOwnProperty(key)) {
                     userIds.push(row[key]);
