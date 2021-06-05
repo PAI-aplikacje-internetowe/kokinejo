@@ -3,7 +3,7 @@
  * - currentPlayer
  *
  * Please, don't use below properties:
- * - players
+ * - userIds
  */
 
 const emptyStates = {
