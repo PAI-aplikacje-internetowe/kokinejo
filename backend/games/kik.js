@@ -112,10 +112,9 @@ router.post('/:gameId/make_move', function (req, res) {
     newState.board[move] = getPlayerSymbol(playerId, gameData.userIds);
 
     let winningCombo = findWinningCombo(newState.board);
-    let winnerId = null;
 
     if (winningCombo) {
-        winnerId = getUserIdBySymbol(newState.board[winningCombo[0]]);
+        newState.winner = getUserIdBySymbol(newState.board[winningCombo[0]]);
         newState.started = false;
         newState.currentPlayer = null;
     } else {
@@ -126,7 +125,6 @@ router.post('/:gameId/make_move', function (req, res) {
 
     res.json({
         status: "ok",
-        winner: winnerId,
         gameState: kikUtils.data(gameId).gameState
     });
 
