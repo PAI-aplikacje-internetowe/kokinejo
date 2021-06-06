@@ -112,10 +112,13 @@ router.post('/:gameId/make_move', function (req, res) {
     newState.board[move] = getPlayerSymbol(playerId, gameData.userIds);
 
     let winningCombo = findWinningCombo(newState.board);
-    let winnerId = null;
 
     if (winningCombo) {
-        winnerId = getUserIdBySymbol(newState.board[winningCombo[0]]);
+        newState.winner = getUserIdBySymbol(newState.board[winningCombo[0]]);
+        newState.started = false;
+        newState.currentPlayer = null;
+    } else if (!hasPossibleMoves(newState.board)) {
+        newState.tied = true;
         newState.started = false;
         newState.currentPlayer = null;
     } else {
@@ -126,11 +129,16 @@ router.post('/:gameId/make_move', function (req, res) {
 
     res.json({
         status: "ok",
-        winner: winnerId,
         gameState: kikUtils.data(gameId).gameState
     });
 
     // ------------- helper game logic functions
+
+    function hasPossibleMoves(board) {
+        return board.some(field => {
+            return field === 0
+        });
+    }
 
     function validateMove(gameData) {
         let gameState = gameData.gameState
@@ -208,7 +216,6 @@ router.post('/:gameId/make_move', function (req, res) {
         return errors;
     }
 });
-
 
 
 module.exports = router;

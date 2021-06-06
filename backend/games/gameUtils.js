@@ -7,25 +7,25 @@ const gameInfo = {
         minPlayers: 2,
         maxPlayers: 2,
         tableName: 'kik',
-        emptyState: emptyStates.kik
+        emptyStateFn: emptyStates.kik
     },
     'crazy-eight': {
         minPlayers: 2,
         maxPlayers: 4,
         tableName: 'crazy_eight',
-        emptyState: emptyStates.crazyEight
+        emptyStateFn: emptyStates.crazyEight
     },
     'solitaire': {
         minPlayers: 1,
         maxPlayers: 1,
         tableName: 'solitaire',
-        emptyState: emptyStates.solitaire
+        emptyStateFn: emptyStates.solitaire
     },
     'oczko': {
         minPlayers: 2,
         maxPlayers: 4,
         tableName: 'oczko',
-        emptyState: emptyStates.oczko
+        emptyStateFn: emptyStates.oczko
     }
 }
 
@@ -80,7 +80,9 @@ function gameUtilsFactory(gameName) {
     }
 
     function getRow(gameId) {
-        const stmt = db.prepare(`SELECT * FROM ${gameUtils.tableName} WHERE id = ?`);
+        const stmt = db.prepare(`SELECT *
+                                 FROM ${gameUtils.tableName}
+                                 WHERE id = ?`);
         try {
             const result = stmt.get(gameId)
             const id = result.id;
@@ -118,7 +120,9 @@ function gameUtilsFactory(gameName) {
     function setState(gameId, newState) {
         let oldState = data(gameId);
         let newStateString = newState instanceof Object ? JSON.stringify(newState) : newState;
-        const stmt = db.prepare(`UPDATE ${gameUtils.tableName} SET state = ? WHERE id = ?`);
+        const stmt = db.prepare(`UPDATE ${gameUtils.tableName}
+                                 SET state = ?
+                                 WHERE id = ?`);
         const info = stmt.run(newStateString, gameId);
         console.debug(`${gameUtils.gameName}, set state, changed ${info.changes} rows`);
     }
@@ -126,7 +130,7 @@ function gameUtilsFactory(gameName) {
     function ready(gameId) {
         const row = getRow(gameId);
 
-        const playersInGame = row.userIds.reduceRight((acc, u) => u != null ? acc+1 : acc, 0)
+        const playersInGame = row.userIds.reduceRight((acc, u) => u != null ? acc + 1 : acc, 0)
         if (playersInGame !== gameUtils.minPlayers) {
             throw Error(`Not enough players: ${playersInGame}/${gameUtils.minPlayers} in ${gameUtils.gameName}:${gameId}`);
         }
@@ -135,7 +139,8 @@ function gameUtilsFactory(gameName) {
         if (oldGameState.started) {
             throw Error(`${gameUtils.gameName}:${gameId} already started`);
         }
-        let newState = JSON.parse(JSON.stringify(oldGameState));
+
+        let newState = info.emptyStateFn();
         newState.currentPlayer = row.userIds[0];
         newState.started = true;
         gameUtils.setState(gameId, newState);
@@ -159,7 +164,9 @@ function gameUtilsFactory(gameName) {
             setJoinabale(false, gameId);
         }
 
-        const stmt = db.prepare(`UPDATE ${gameUtils.tableName} SET user${freeSeat}_id = ? WHERE id = ?`);
+        const stmt = db.prepare(`UPDATE ${gameUtils.tableName}
+                                 SET user${freeSeat}_id = ?
+                                 WHERE id = ?`);
         const info = stmt.run(playerId, gameId);
         console.debug(`${gameUtils.gameName}:${gameId}, player ${playerId} joined, changed ${info.changes} rows`);
 
@@ -190,7 +197,9 @@ function gameUtilsFactory(gameName) {
             setJoinabale(true, gameId);
         }
 
-        const stmt = db.prepare(`UPDATE ${gameUtils.tableName} SET user${seatToFree}_id = ? WHERE id = ?`);
+        const stmt = db.prepare(`UPDATE ${gameUtils.tableName}
+                                 SET user${seatToFree}_id = ?
+                                 WHERE id = ?`);
         const info = stmt.run(null, gameId);
         console.debug(`${gameUtils.gameName}:${gameId}, player ${playerId} left, changed ${info.changes} rows`);
 
@@ -205,15 +214,17 @@ function gameUtilsFactory(gameName) {
 
     function setJoinabale(value, gameId) {
         let valueToInsert = value ? 1 : 0;
-        const stmt = db.prepare(`UPDATE kik SET joinable = ? WHERE id = ?`);
+        const stmt = db.prepare(`UPDATE kik
+                                 SET joinable = ?
+                                 WHERE id = ?`);
         const info = stmt.run(valueToInsert, gameId);
         console.debug(`${gameUtils.gameName}:${gameId}, joinable set to ${value}, changed ${info.changes} rows`);
     }
 
     function availableGames() {
         const stmt = db.prepare(`SELECT id, ${userIdsString()}
-                             FROM ${gameUtils.tableName}
-                             WHERE joinable == true`);
+                                 FROM ${gameUtils.tableName}
+                                 WHERE joinable == true`);
 
         // todo wl: poprawić czytelność
         const rows = stmt.all();
@@ -234,7 +245,8 @@ function gameUtilsFactory(gameName) {
 
 
     function isTableEmpty() {
-        const stmt = db.prepare(`SELECT count(*) FROM ${gameUtils.tableName}`);
+        const stmt = db.prepare(`SELECT count(*)
+                                 FROM ${gameUtils.tableName}`);
         const info = stmt.get();
         const count = parseInt(info['count(*)']);
         return count === 0;
@@ -244,8 +256,9 @@ function gameUtilsFactory(gameName) {
         const stmt = db.prepare(`INSERT INTO ${gameUtils.tableName} (state, ${userIdsString()}, joinable)
                                  VALUES (?, ${userIdPlaceholders.toString()}, true)`);
         console.info(`Creating ${gamesCount} ${gameUtils.gameName} games`);
+        let emptyStateString = JSON.stringify(info.emptyStateFn())
         for (let i = 0; i < gamesCount; i++) {
-            stmt.run(JSON.stringify(info.emptyState));
+            stmt.run(emptyStateString);
         }
     }
 
