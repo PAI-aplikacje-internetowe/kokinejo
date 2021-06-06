@@ -117,6 +117,10 @@ router.post('/:gameId/make_move', function (req, res) {
         newState.winner = getUserIdBySymbol(newState.board[winningCombo[0]]);
         newState.started = false;
         newState.currentPlayer = null;
+    } else if (!hasPossibleMoves(newState.board)) {
+        newState.tied = true;
+        newState.started = false;
+        newState.currentPlayer = null;
     } else {
         newState.currentPlayer = gameData.userIds[0] === playerId ? gameData.userIds[1] : gameData.userIds[0];
     }
@@ -129,6 +133,12 @@ router.post('/:gameId/make_move', function (req, res) {
     });
 
     // ------------- helper game logic functions
+
+    function hasPossibleMoves(board) {
+        return board.some(field => {
+            return field === 0
+        });
+    }
 
     function validateMove(gameData) {
         let gameState = gameData.gameState
@@ -206,7 +216,6 @@ router.post('/:gameId/make_move', function (req, res) {
         return errors;
     }
 });
-
 
 
 module.exports = router;

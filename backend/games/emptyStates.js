@@ -13,6 +13,7 @@ const emptyStates = {
             started: false,
             currentPlayer: null,
             winner: null,
+            tied: false,
             board: [0, 0, 0, 0, 0, 0, 0, 0, 0]
         }
     },
