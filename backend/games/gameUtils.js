@@ -184,6 +184,7 @@ function gameUtilsFactory(gameName) {
     }
 
     function leaveGame(gameId, playerId) {
+        // TODO: jeżeli ktoś opuści to zresetować stan
         const row = getRow(gameId);
         if (playerId < 1) {
             throw Error("Wrong user id");
