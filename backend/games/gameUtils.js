@@ -135,7 +135,8 @@ function gameUtilsFactory(gameName) {
         if (oldGameState.started) {
             throw Error(`${gameUtils.gameName}:${gameId} already started`);
         }
-        let newState = JSON.parse(JSON.stringify(oldGameState));
+
+        let newState = copyObject(info.emptyState);
         newState.currentPlayer = row.userIds[0];
         newState.started = true;
         gameUtils.setState(gameId, newState);
@@ -251,6 +252,10 @@ function gameUtilsFactory(gameName) {
 
     instances.set(gameName, gameUtils);
     return gameUtils;
+}
+
+function copyObject(obj) {
+    return JSON.parse(JSON.stringify(obj));
 }
 
 module.exports = gameUtilsFactory;

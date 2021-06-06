@@ -1,6 +1,9 @@
 /** Each state should provide standard properties:
  * - started
  * - currentPlayer
+ *
+ * When a game starts (by /ready request) the game state is overridden
+ * with a new empty state.
  */
 
 const emptyStates = {
