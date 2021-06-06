@@ -7,25 +7,25 @@ const gameInfo = {
         minPlayers: 2,
         maxPlayers: 2,
         tableName: 'kik',
-        emptyState: emptyStates.kik
+        emptyStateFn: emptyStates.kik
     },
     'crazy-eight': {
         minPlayers: 2,
         maxPlayers: 4,
         tableName: 'crazy_eight',
-        emptyState: emptyStates.crazyEight
+        emptyStateFn: emptyStates.crazyEight
     },
     'solitaire': {
         minPlayers: 1,
         maxPlayers: 1,
         tableName: 'solitaire',
-        emptyState: emptyStates.solitaire
+        emptyStateFn: emptyStates.solitaire
     },
     'oczko': {
         minPlayers: 2,
         maxPlayers: 4,
         tableName: 'oczko',
-        emptyState: emptyStates.oczko
+        emptyStateFn: emptyStates.oczko
     }
 }
 
@@ -136,7 +136,7 @@ function gameUtilsFactory(gameName) {
             throw Error(`${gameUtils.gameName}:${gameId} already started`);
         }
 
-        let newState = copyObject(info.emptyState);
+        let newState = info.emptyStateFn();
         newState.currentPlayer = row.userIds[0];
         newState.started = true;
         gameUtils.setState(gameId, newState);
@@ -245,17 +245,14 @@ function gameUtilsFactory(gameName) {
         const stmt = db.prepare(`INSERT INTO ${gameUtils.tableName} (state, ${userIdsString()}, joinable)
                                  VALUES (?, ${userIdPlaceholders.toString()}, true)`);
         console.info(`Creating ${gamesCount} ${gameUtils.gameName} games`);
+        let emptyStateString = JSON.stringify(info.emptyStateFn())
         for (let i = 0; i < gamesCount; i++) {
-            stmt.run(JSON.stringify(info.emptyState));
+            stmt.run(emptyStateString);
         }
     }
 
     instances.set(gameName, gameUtils);
     return gameUtils;
-}
-
-function copyObject(obj) {
-    return JSON.parse(JSON.stringify(obj));
 }
 
 module.exports = gameUtilsFactory;

@@ -1,28 +1,41 @@
 /** Each state should provide standard properties:
  * - started
  * - currentPlayer
+ * - winner
  *
  * When a game starts (by /ready request) the game state is overridden
  * with a new empty state.
  */
 
 const emptyStates = {
-    kik: {
-        started: false,
-        currentPlayer: null,
-        board: [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    kik: () => {
+        return {
+            started: false,
+            currentPlayer: null,
+            winner: null,
+            board: [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        }
     },
-    crazyEight: {
-        started: false,
-        currentPlayer: null,
+    crazyEight: () => {
+        return {
+            started: false,
+            currentPlayer: null,
+            winner: null,
+        }
     },
-    solitaire: {
-        started: false,
-        currentPlayer: null,
+    solitaire: () => {
+        return {
+            started: false,
+            currentPlayer: null,
+            winner: null,
+        }
     },
-    oczko: {
-        started: false,
-        currentPlayer: null,
+    oczko: () => {
+        return {
+            started: false,
+            currentPlayer: null,
+            winner: null,
+        }
     },
 }
 
