@@ -4,7 +4,7 @@
     <div>
       <ul>
         <li v-for="(item, index) in gameLists">
-          <a v-bind:href="'/kik/game' + item.id">{{ item.id }}</a>
+          <router-link :to="{ name: 'game', params: {id: item.id }}">gra nr {{ item. id }}</router-link>
         </li>
       </ul>
     </div>
