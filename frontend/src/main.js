@@ -8,16 +8,16 @@ const app = createApp(App)
 
 const routes= [
     {
-        path: '/kik/game',
-        name: 'game',
-        component: KiK,
-        params: true
-    },
-    {
         path: '/kik',
         name: 'kik',
         component: KiK_available_games
-    }
+    },
+    {
+        path: '/kik/game/:id',
+        name: 'game',
+        component: KiK,
+    },
+
 ]
 
 const router = createRouter ({
