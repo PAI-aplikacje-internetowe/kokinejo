@@ -2,31 +2,63 @@
   <div>
     <h1>{{ msg }}</h1>
   </div>
-  <div v-if="loading">LOADING...</div>
-  <div v-else>
+  <br>
+  <div class="menu">
+    <input type="button" class="button" value="Dołącz do gry" v-on:click="this.join"/>
+    <input type="button" class="button" value="START" v-on:click="this.startGame"/>
+    <input type="button" class="button" value="Wyjdź z pokoju" v-on:click="this.leave"/>
+  </div>
+  <br><br>
+  <div v-if="loading">
     <div>
       <table>
         <tr>
-          <td id="0" v-on:click="clickHandler">{{ values[0] }}</td>
-          <td id="1" v-on:click="clickHandler" class="vert">{{ values[1] }}</td>
-          <td id="2" v-on:click="clickHandler">{{ values[2] }}</td>
+          <td id="00">{{ values[0] }}</td>
+          <td id="11" class="vert">{{ values[1] }}</td>
+          <td id="22">{{ values[2] }}</td>
         </tr>
         <tr>
-          <td id="3" v-on:click="clickHandler" class="hori">{{ values[3] }}</td>
-          <td id="4" v-on:click="clickHandler" class="vert hori">{{ values[4] }}</td>
-          <td id="5" v-on:click="clickHandler" class="hori">{{ values[5] }}</td>
+          <td id="33" class="hori">{{ values[3] }}</td>
+          <td id="44" class="vert hori">{{ values[4] }}</td>
+          <td id="55" class="hori">{{ values[5] }}</td>
         </tr>
         <tr>
-          <td id="6" v-on:click="clickHandler">{{ values[6] }}</td>
-          <td id="7" v-on:click="clickHandler" class="vert">{{ values[7] }}</td>
-          <td id="8" v-on:click="clickHandler">{{ values[8] }}</td>
+          <td id="66">{{ values[6] }}</td>
+          <td id="77" class="vert">{{ values[7] }}</td>
+          <td id="88">{{ values[8] }}</td>
         </tr>
       </table>
     </div>
   </div>
+  <div v-else>
+    <div>
+      <table>
+        <tr>
+          <td id="0" v-on:click="this.clickHandler">{{ values[0] }}</td>
+          <td id="1" v-on:click="this.clickHandler" class="vert">{{ values[1] }}</td>
+          <td id="2" v-on:click="this.clickHandler">{{ values[2] }}</td>
+        </tr>
+        <tr>
+          <td id="3" v-on:click="this.clickHandler" class="hori">{{ values[3] }}</td>
+          <td id="4" v-on:click="this.clickHandler" class="vert hori">{{ values[4] }}</td>
+          <td id="5" v-on:click="this.clickHandler" class="hori">{{ values[5] }}</td>
+        </tr>
+        <tr>
+          <td id="6" v-on:click="this.clickHandler">{{ values[6] }}</td>
+          <td id="7" v-on:click="this.clickHandler" class="vert">{{ values[7] }}</td>
+          <td id="8" v-on:click="this.clickHandler">{{ values[8] }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <br>
   <div>
     <input v-model="user_id" placeholder="edit me">
     <p>ID is: {{ user_id }}</p>
+  </div>
+  <div>
+    <p>{{ messageFromBackend }}</p>
+    <p>{{ error }}</p>
   </div>
 </template>
 
@@ -38,22 +70,31 @@ export default {
     return {
       msg: null,
       values: [null, null, null, null, null, null, null, null, null],
-      move: 0,
       user_id: 0,
       state: null,
       error: null,
       loading: true,
-      clickHandler: clickHandler
+      moveValue: null,
+      field_id: null,
+      users: [],
+      firstState: false,
+      messageFromBackend: null,
     };
   },
 
   created() {
     this.msg = 'Kółko i krzyżyk gra';
-    this.getState()
+    this.getState();
+    this.firstState = true;
+    setInterval(() => {
+      this.getState()
+    }, 1000);
   },
+
   watch: {
     '$route': 'fetchData'
   },
+
   methods: {
     async getState() {
       this.error = this.state = null
@@ -62,11 +103,15 @@ export default {
       await fetch('http://localhost:3000/kik/' + gameId + '/state')
           .then(response => response.json())
           .then(data => {
-            this.state = data.gameState
-            console.log(this.state.board)
+            if(data.status === "error"){
+              this.error = data.error
+            } else {
+              this.state = data.gameState
+            }
           })
-          .catch(err => console.error((err)))
+          .catch(err => err => console.error(err))
       this.loading = false
+      this.endGameInfo()
       this.state.board.map((field, index) => {
         if (field === 0) {
           this.values[index] = null
@@ -76,23 +121,90 @@ export default {
           this.values[index] = 'O'
         }
       })
-      console.log(this.state)
+    },
+
+    async join() {
+      this.error = null
+      this.users = []
+      const gameId = this.$route.params.id
+      await fetch('http://localhost:3000/kik/' + gameId + '/join?userId=' + this.user_id)
+          .then(response => response.json())
+          .then(data => {
+            if(data.status === "error"){
+              this.error = data.error
+            } else {
+              this.users = data.userIds
+            }
+          })
+          .catch(err => console.error((err)))
+      console.log(this.users)
+    },
+
+    async leave() {
+      this.error = null
+      const gameId = this.$route.params.id
+      await fetch('http://localhost:3000/kik/' + gameId + '/leave?userId=' + this.user_id)
+          .then(response => response.json())
+          .catch(err => console.error(err))
+    },
+
+    async startGame() {
+      this.error = null
+      const gameId = this.$route.params.id
+      await fetch('http://localhost:3000/kik/' + gameId + '/ready')
+          .then(response => response.json())
+          .catch(err => console.error(err))
+    },
+
+    async makeMove() {
+      this.error = this.moveValue = null
+      const gameId = this.$route.params.id
+      await fetch('http://localhost:3000/kik/' + gameId + '/make_move', {
+        method: 'POST',
+        mode: 'cors',
+        credentials: 'same-origin',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': 'origin-list',
+        },
+        body: JSON.stringify({playerId: parseInt(this.user_id), move: this.field_id})
+      })
+          .then(response => response.json())
+          .then(data => {
+            if(data.status === "error"){
+              this.error = data.error
+            }
+          })
+          .catch(err => err => console.error(err))
+      console.log(this.user_id)
+      console.log(this.field_id)
+    },
+
+    async getInfo() {
+
+    },
+
+    endGameInfo() {
+      console.log(this.state.winner)
+      if(this.state.winner !== null){
+        this.messageFromBackend = "Wygrał gracz: " + this.state.winner + "!"
+      }
+      if(this.state.tied){
+        this.messageFromBackend = "REMIS!"
+      }
+    },
+
+    clickHandler(event) {
+      if (this.values[event.target.id] !== null) {
+        console.log("pole zajęte")
+      } else {
+        this.field_id = event.target.id
+        this.makeMove()
+      }
     }
   }
 };
-
-function clickHandler(event) {
-  if (this.values[event.target.id] !== null) {
-    console.log("pole zajęte")
-  } else {
-    if (this.move % 2 === 0) {
-      this.values[event.target.id] = "X"
-    } else {
-      this.values[event.target.id] = "O"
-    }
-    this.move++
-  }
-}
 
 </script>
 
@@ -115,5 +227,13 @@ table {
 .hori {
   border-top: 2px solid black;
   border-bottom: 2px solid black;
+}
+
+.menu {
+  /*margin-left: 500px;*/
+}
+
+.button {
+  margin-left: 50px;
 }
 </style>
