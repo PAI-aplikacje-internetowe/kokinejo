@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 export PORT=3000
 
 DIR=$(dirname $0)
@@ -21,7 +23,7 @@ usage() {
 createDbIfMissing() {
   if [ ! -f "$DB_PATH" ]; then
     echo "Creating database $DB_PATH..."
-    cat "$DB_SCHEMA_PATH" | sqlite3 "$DB_PATH"
+    sqlite3 "$DB_PATH" ".read '$DB_SCHEMA_PATH'"
     echo "Database $DB_PATH created"
   fi
 }
