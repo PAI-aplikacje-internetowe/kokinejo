@@ -5,7 +5,7 @@ set -e
 export PORT=3000
 
 DIR=$(dirname $0)
-BACKEND_ROOT="$DIR/backend"
+BACKEND_ROOT="$DIR"
 
 DB_SCHEMA="database.sql"
 DB_SCHEMA_PATH="$DIR/$DB_SCHEMA"
@@ -36,7 +36,7 @@ _clear() {
 
 runBackend() {
   cd ${BACKEND_ROOT}
-  npm start
+  exec npm run start
 }
 
 trap ctrl_c INT
