@@ -9,12 +9,15 @@ const corsOptions = {
     optionsSuccessStatus: 200 // legacy browser support
 }
 
-const gameUtilsFactory = require('./games/gameUtils');
 const indexRouter = require('./routes/index');
 const signupRouter = require('./routes/signup');
 
-const kikGame = require('./games/kik');
-const kikUtils = gameUtilsFactory('tic-tac-toe');
+const Kik = require('./games/Kik');
+const kikController = new Kik();
+
+process.on('uncaughtException', (err) => {
+    console.log(err)
+});
 
 const app = express();
 
@@ -32,11 +35,15 @@ app.use('/', indexRouter);
 app.use('/signup', signupRouter);
 
 // games routing
-app.use('/kik', kikGame);
+app.use('/kik', kikController.getRouter());
 
 // games initialization
+const gameUtilsFactory = require('./games/gameUtils');
+
+const kikUtils = gameUtilsFactory('tic-tac-toe');
 kikUtils.init();
 
+// default route for every request
 app.use((req, res) => {
     res.status(404);
     res.json({
