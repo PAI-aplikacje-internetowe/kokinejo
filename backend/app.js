@@ -5,7 +5,7 @@ const cors = require('cors');
 const debug = require('debug')('backend:app');
 
 const corsOptions = {
-    origin: "http://localhost:8080",
+    origin: 'http://localhost:8080',
     optionsSuccessStatus: 200 // legacy browser support
 }
 
@@ -23,6 +23,7 @@ const kikGame = require('./games/kik');
 const kikUtils = gameUtilsFactory('tic-tac-toe');
 
 const app = express();
+app.disable('x-powered-by');
 
 app.use(logger('dev'));
 app.use(express.urlencoded({extended: false}));
@@ -54,8 +55,10 @@ const requireAuth = passport.authenticate(['basic', 'bearer'], {
 // games routing
 app.use('/kik', requireAuth, express.json(), kikGame);
 
-// games initialization
-kikUtils.init();
+app.init = () => {
+  // games initialization
+  kikUtils.init();
+}
 
 app.use((req, res, next) => {
   next({

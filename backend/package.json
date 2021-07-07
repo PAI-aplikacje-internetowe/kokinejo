@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon --watch . --watch ./bin/www ./bin/www",
+    "dev": "nodemon ./bin/www",
     "start": "node ./bin/www"
   },
   "dependencies": {
@@ -22,5 +22,14 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.9"
+  },
+  "nodemonConfig": {
+    "watch": [
+      ".",
+      "bin/www"
+    ],
+    "ignore": [
+      "test"
+    ]
   }
 }
