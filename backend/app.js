@@ -25,7 +25,10 @@ const kikUtils = gameUtilsFactory('tic-tac-toe');
 const app = express();
 app.disable('x-powered-by');
 
-app.use(logger('dev'));
+// disable logging during tests
+app.use(logger('dev', { skip: () =>
+  typeof global.it === 'function'
+}));
 app.use(express.urlencoded({extended: false}));
 
 app.use(cors(corsOptions));

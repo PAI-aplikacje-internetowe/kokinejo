@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon ./bin/www",
+    "test": "mocha",
     "start": "node ./bin/www"
   },
   "dependencies": {
@@ -21,6 +22,9 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
+    "mocha": "^9.0.2",
     "nodemon": "^2.0.9"
   },
   "nodemonConfig": {
@@ -31,5 +35,11 @@
     "ignore": [
       "test"
     ]
+  },
+  "mocha": {
+    "diff": false,
+    "ignore": "test/setup.js",
+    "require": "test/setup.js",
+    "slow": "250"
   }
 }
