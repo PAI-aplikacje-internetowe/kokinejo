@@ -83,7 +83,9 @@ function onError(error) {
  */
 
 function onListening() {
+  app.init();
   const addr = server.address();
   const port = addr.port;
-  console.debug(`Listening on http://localhost:${port}`);
+  const address = addr.family == 'IPv4' ? addr.address : `[${addr.address}]`
+  console.debug(`Listening on http://${address}:${port}`);
 }

@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+set -e
+
 export PORT=3000
 
 DIR=$(dirname $0)
-BACKEND_ROOT="$DIR/backend"
+BACKEND_ROOT="$DIR"
 
 DB_SCHEMA="database.sql"
 DB_SCHEMA_PATH="$DIR/$DB_SCHEMA"
@@ -21,7 +23,7 @@ usage() {
 createDbIfMissing() {
   if [ ! -f "$DB_PATH" ]; then
     echo "Creating database $DB_PATH..."
-    cat "$DB_SCHEMA_PATH" | sqlite3 "$DB_PATH"
+    sqlite3 "$DB_PATH" ".read '$DB_SCHEMA_PATH'"
     echo "Database $DB_PATH created"
   fi
 }
@@ -34,7 +36,7 @@ _clear() {
 
 runBackend() {
   cd ${BACKEND_ROOT}
-  npm start
+  exec npm run start
 }
 
 trap ctrl_c INT

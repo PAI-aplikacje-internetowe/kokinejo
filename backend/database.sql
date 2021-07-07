@@ -9,7 +9,7 @@ CREATE TABLE tokens
 (
     id      integer PRIMARY KEY AUTOINCREMENT,
     user_id integer,
-    token   string
+    token   string UNIQUE
 );
 
 CREATE TABLE kik
