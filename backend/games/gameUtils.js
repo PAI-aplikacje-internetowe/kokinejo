@@ -38,7 +38,7 @@ function gameUtilsFactory(gameName) {
     }
 
     if (!gameInfo.hasOwnProperty(gameName)) {
-        throw Error(`No saved gameInfo about ${gameName}`);
+        throw Error(`No saved gameInfo about ${gameName}. Please, update gameUtils.js with needed game informations`);
     }
 
     const info = gameInfo[gameName];

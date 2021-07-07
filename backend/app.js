@@ -19,8 +19,12 @@ const gameUtilsFactory = require('./games/gameUtils');
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 
-const kikGame = require('./games/kik');
-const kikUtils = gameUtilsFactory('tic-tac-toe');
+const Kik = require('./games/Kik');
+const kikController = new Kik();
+
+process.on('uncaughtException', (err) => {
+    console.log(err)
+});
 
 const app = express();
 app.disable('x-powered-by');
@@ -56,10 +60,11 @@ const requireAuth = passport.authenticate(['basic', 'bearer'], {
 });
 
 // games routing
-app.use('/kik', requireAuth, express.json(), kikGame);
+app.use('/kik', requireAuth, express.json(), kikController.getRouter());
 
 app.init = () => {
   // games initialization
+  const kikUtils = gameUtilsFactory('tic-tac-toe');
   kikUtils.init();
 }
 
