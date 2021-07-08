@@ -1,22 +1,22 @@
 const express = require('express');
-const router = express.Router();
 const utils = require('../utils');
 
 const gameUtilsFactory = require('./gameUtils');
 
 class BaseGameController {
     constructor(gameName) {
+        this.router = express.Router();
         this.gameUtils = gameUtilsFactory(gameName)
-        router.get('/', this.index);
-        router.get('/available_games', this.availableGames);
-        router.get('/:gameId/join', this.join);
-        router.get('/:gameId/leave', this.leave);
-        router.get('/:gameId/ready', this.setReady);
-        router.get('/:gameId/state', this.getState);
+        this.router.get('/', this.index);
+        this.router.get('/available_games', this.availableGames);
+        this.router.get('/:gameId/join', this.join);
+        this.router.get('/:gameId/leave', this.leave);
+        this.router.get('/:gameId/ready', this.setReady);
+        this.router.get('/:gameId/state', this.getState);
     }
 
     getRouter = () => {
-        return router;
+        return this.router;
     }
 
     index = (req, res) => {
