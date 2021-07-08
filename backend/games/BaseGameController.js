@@ -88,14 +88,22 @@ class BaseGameController {
 
        try {
            const gameData = this.gameUtils.data(gameId);
+           const filteredState = this.filterStateForUser(gameData.gameState);
            res.json({
                status: "ok",
                userIds: gameData.userIds,
-               gameState: gameData.gameState
+               gameState: filteredState,
            });
        } catch (e) {
            utils.badRequest(res, e);
        }
+   }
+
+   filterStateForUser = (gameState) => {
+        // this implementation does not filter anything
+        // everyone can get full state of the game
+        // you can override this method to hide some sensitive game data
+        return gameState;
    }
 }
 

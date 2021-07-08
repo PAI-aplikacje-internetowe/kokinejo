@@ -1,5 +1,4 @@
 const BaseGameController = require("./BaseGameController");
-const express = require('express');
 
 class ExampleGameController extends BaseGameController {
     constructor() {
@@ -12,6 +11,12 @@ class ExampleGameController extends BaseGameController {
         res.json({
             status: "this is extra function, e.g. with makeMove implementation"
         })
+    }
+
+    filterStateForUser = (gameState) => {
+        // do some filtering of state - don't show everyone
+        // what cards other players have!
+        return gameState;
     }
 }
 
