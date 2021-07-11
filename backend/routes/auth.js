@@ -6,9 +6,13 @@ const debug = require('debug')('backend:auth');
 const db = require('../db');
 const userRepository = require('../repositories/user');
 
+const passport_options = {
+  failWithError: true,
+  session: false,
+};
 // ugly hack, but passport-local is not flexible at all...
 const passport_local_middleware = (req, res, next) => {
-  passport.authenticate('local', { session: false }, (err, user, info, status) => {
+  passport.authenticate('local', passport_options, (err, user, info, status) => {
     if (err) return next(err);
     if (!user) return res.sendStatus(401);
     req.user = user;
@@ -46,7 +50,7 @@ router.post('/signup',
 );
 
 router.get('/token',
-  passport.authenticate('basic', { session: false }),
+  passport.authenticate('basic', passport_options),
   (req, res) =>
     userRepository.newToken(req.user.id)
       .then((token) =>
@@ -58,7 +62,6 @@ router.get('/token',
 );
 router.post('/token',
   express.json(),
-  // passport.authenticate('local', { session: false }),
   passport_local_middleware,
   (req, res) =>
     userRepository.newToken(req.user.id)
@@ -71,7 +74,7 @@ router.post('/token',
 );
 
 router.get('/logout',
-  passport.authenticate(['bearer'], { session: false }),
+  passport.authenticate(['bearer'], passport_options),
   (req, res) => {
     const authorization = req.header('Authorization');
     const token = authorization.substring(authorization.indexOf(' ') + 1);
@@ -86,7 +89,7 @@ router.get('/logout',
 );
 
 router.get('/me',
-  passport.authenticate(['basic', 'bearer'], { session: false }),
+  passport.authenticate(['basic', 'bearer'], passport_options),
   (req, res) => res.json({
     name: req.user.name,
     id: req.user.id,
