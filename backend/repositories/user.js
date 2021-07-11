@@ -75,9 +75,20 @@ const checkToken = (token, callback = (_, x) => x) => {
   return callback(null, user);
 };
 
+const removeTokenSQL = db.prepare(`DELETE FROM tokens
+  WHERE token = ?`);
+const removeToken = (token) => {
+  debug('removeToken: %o', token);
+  if (!token || !token.length || token.length != 36)
+    return Promise.reject('Wrong token');
+  removeTokenSQL.run(token);
+  return Promise.resolve(token);
+};
+
 module.exports = {
   check,
   create,
   newToken,
   checkToken,
+  removeToken,
 }

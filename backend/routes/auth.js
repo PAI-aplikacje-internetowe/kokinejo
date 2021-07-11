@@ -70,6 +70,21 @@ router.post('/token',
   ),
 );
 
+router.get('/logout',
+  passport.authenticate(['bearer'], { session: false }),
+  (req, res) => {
+    const authorization = req.header('Authorization');
+    const token = authorization.substring(authorization.indexOf(' ') + 1);
+    userRepository.removeToken(token)
+      .then(() =>
+        res.json({ status: "ok" })
+      )
+      .catch((error) =>
+        res.status(500).json({ error })
+      );
+  },
+);
+
 router.get('/me',
   passport.authenticate(['basic', 'bearer'], { session: false }),
   (req, res) => res.json({
@@ -78,7 +93,6 @@ router.get('/me',
   }),
 );
 router.post('/me',
-  // passport.authenticate('local', { session: false }),
   passport_local_middleware,
   (req, res) => res.json({
     name: req.user.name,

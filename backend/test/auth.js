@@ -207,6 +207,31 @@ describe('Auth module', () => {
           .catch(done);
       });
 
+      it(`should allow to logout`, (done) => {
+        app()
+          .get(prefix + '/logout')
+          .set('Authorization', 'Bearer ' + token)
+          .then((res) => {
+            expect(res).to.have.status(200);
+            expect(res).to.be.json;
+            expect(res.text).to.be.a('string');
+            done();
+          })
+          .catch(done);
+      });
+
+      it('should not allow the same token to be used', (done) => {
+        app()
+          .get(prefix + '/me')
+          .set('Authorization', 'Bearer ' + token)
+          .then((res) => {
+            expect(res).to.have.status(401);
+            expect(res).to.be.json;
+            done();
+          })
+          .catch(done);
+      });
+
     });
   });
 });
