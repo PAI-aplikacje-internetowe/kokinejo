@@ -20,7 +20,9 @@ const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 
 const Kik = require('./games/Kik');
+const CrazyEight = require('./games/CrazyEight');
 const kikController = new Kik();
+const crazyEightController = new CrazyEight();
 
 process.on('uncaughtException', (err) => {
     console.log(err)
@@ -60,12 +62,17 @@ const requireAuth = passport.authenticate(['basic', 'bearer'], {
 });
 
 // games routing
+app.use('/crazy8', requireAuth, express.json(), crazyEightController.getRouter());
 app.use('/kik', requireAuth, express.json(), kikController.getRouter());
 
 app.init = () => {
   // games initialization
-  const kikUtils = gameUtilsFactory('tic-tac-toe');
-  kikUtils.init();
+  [
+      'crazy-eight',
+      'tic-tac-toe',
+  ].forEach(gamename => {
+      gameUtilsFactory(gamename).init();
+  })
 }
 
 app.use((req, res, next) => {
