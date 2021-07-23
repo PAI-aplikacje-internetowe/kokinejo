@@ -2,11 +2,17 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import KiK_available_games from "./components/KiK_available_games.vue"
 import KiK from "./components/KiK.vue";
+import Home from "./components/Home.vue";
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 const app = createApp(App)
 
 const routes= [
+    {
+        path: '/',
+        name: 'home',
+        component: Home,
+    },
     {
         path: '/kik',
         name: 'kik',
