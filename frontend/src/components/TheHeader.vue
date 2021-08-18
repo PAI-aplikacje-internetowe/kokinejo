@@ -37,7 +37,7 @@
 
           <div class="field has-addons navbar-item">
             <div class="control">
-              <input class="input" type="text" placeholder="Token" v-model="tokenInput">
+              <input class="input" type="text" :placeholder="loadToken" v-model="tokenInput">
             </div>
             <div class="control">
               <a
@@ -81,6 +81,10 @@ export default defineComponent({
   computed: {
     count() {
       return this.$store.state.count;
+    },
+    loadToken() {
+      const token = this.$store.state.token;
+      return token || 'Token';
     }
   },
   methods: {
@@ -94,7 +98,7 @@ export default defineComponent({
     },
     setToken() {
       this.$store.commit('setToken', this.tokenInput);
-    }
+    },
   }
 })
 </script>
