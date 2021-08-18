@@ -50,12 +50,12 @@ export default defineComponent({
         },
         {
           name: 'Solitaire',
-          routerName: 'crazy-eights',
+          routerName: 'not-found',
           description: 'This is solitaire',
         },
         {
           name: 'Oczko',
-          routerName: 'crazy-eights',
+          routerName: 'not-found',
           description: 'The oczko game - this is the best!',
         },
       ]

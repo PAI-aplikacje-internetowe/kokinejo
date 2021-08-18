@@ -23,9 +23,9 @@
 
       <div id="navbar-menu" class="navbar-menu" :class="{'is-active': menuIsActive}">
         <div class="navbar-start">
-          <a class="navbar-item">
+          <router-link :to="{name: 'home'}" class="navbar-item">
             <strong>Games</strong>
-          </a>
+          </router-link>
           <a class="navbar-item">
             <strong>About</strong>
           </a>
