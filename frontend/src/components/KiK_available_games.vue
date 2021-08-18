@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import {get} from "../fetchUtils";
+
 export default {
   data() {
     return {
@@ -20,7 +22,7 @@ export default {
     };
   },
   created() {
-    fetch('http://localhost:3000/kik/available_games')
+    get('http://localhost:3000/kik/available_games')
         .then(response => response.json())
         .then(data => (this.gameLists = data.availableGames))
         .catch(err => console.error(err));
