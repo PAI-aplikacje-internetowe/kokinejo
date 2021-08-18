@@ -1,26 +1,16 @@
 <template>
   <section id="home-section" class="section is-align-self-center">
-    <h1 class="title">Welcome to Kokinejo</h1>
-    <h2 class="subtitle">Choose your game and play</h2>
+    <h1 class="title has-text-centered">Welcome to Kokinejo</h1>
+    <h2 class="subtitle has-text-centered">Choose your game and play</h2>
 
     <div class="box">
-      <div class="tile is-ancestor">
-
-<!--        TODO: Generować dynamicznie na podstawie gdzieś zapisanych danych - jak zrobić kolumny?-->
-        <div class="tile is-parent is-vertical">
-          <GameTile game-name="Kółko i krzyżyk"/>
-          <GameTile game-name="Crazy Eights"/>
-        </div>
-
-        <div class="tile is-parent is-vertical">
-          <GameTile game-name="Oczko"/>
-<!--          <GameTile />-->
-        </div>
-
-        <div class="tile is-parent is-vertical">
-          <GameTile game-name="Pasjans Solitaire"/>
-<!--          <GameTile />-->
-        </div>
+      <div class="columns is-multiline">
+        <template v-for="game in games">
+          <GameTile
+              :game-name="game.name"
+              :play-route="game.routerName"
+          />
+        </template>
       </div>
     </div>
 

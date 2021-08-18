@@ -1,5 +1,5 @@
 <template>
-  <div class="tile is-child">
+  <div class="column is-one-third">
     <div class="card">
 
       <div class="card-image">
@@ -22,34 +22,47 @@
       </div>
 
       <footer class="card-footer">
-        <!--        <a class="card-footer-item play-button has-text-primary has-text-weight-bold">Play</a>-->
         <router-link
-            :to="{ name: playRouteName }"
+            :to="{ name: playRoute }"
             class="card-footer-item play-button has-text-primary has-text-weight-bold"
         >
           Play
         </router-link>
-        <router-link
-            :to="{ name: moreRouteName }"
-            class="card-footer-item has-text-black"
+        <a
+            @click="toggleInfo"
+            class="card-footer-item has-text-black is-warning"
         >
           More
-        </router-link>
+        </a>
       </footer>
+
+      <GameInfoModal
+          :active="infoIsActive"
+          @info-close="toggleInfo"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import {defineComponent} from "vue";
+import GameInfoModal from "./GameInfoModal.vue";
 
 export default defineComponent({
   name: 'GameTile',
-  props: ['gameName'],
+  components: {GameInfoModal},
+  props: ['gameName', 'playRoute'],
   data() {
     return {
-      playRouteName: "",
-      moreRouteName: "",
+      infoIsActive: false,
+    }
+  },
+  methods: {
+    toggleInfo() {
+      this.infoIsActive = !this.infoIsActive;
+
+      document.documentElement.classList.toggle('is-clipped');
+      // to prevent from scrolling background when modal is opened
     }
   }
 })
