@@ -29,6 +29,25 @@
           <a class="navbar-item">
             <strong>About</strong>
           </a>
+          <a class="navbar-item"
+             @click="commitIncrement"
+          >
+            {{ count }}
+          </a>
+
+          <div class="field has-addons navbar-item">
+            <div class="control">
+              <input class="input" type="text" placeholder="Token" v-model="tokenInput">
+            </div>
+            <div class="control">
+              <a
+                  class="button is-info"
+                  @click="setToken"
+              >
+                Set token
+              </a>
+            </div>
+          </div>
         </div>
 
         <div class="navbar-end">
@@ -56,6 +75,12 @@ export default defineComponent({
   data() {
     return {
       menuIsActive: false,
+      tokenInput: '',
+    }
+  },
+  computed: {
+    count() {
+      return this.$store.state.count;
     }
   },
   methods: {
@@ -63,6 +88,12 @@ export default defineComponent({
       if (event) {
         this.menuIsActive = !this.menuIsActive;
       }
+    },
+    commitIncrement() {
+      this.$store.commit('increment');
+    },
+    setToken() {
+      this.$store.commit('setToken', this.tokenInput);
     }
   }
 })

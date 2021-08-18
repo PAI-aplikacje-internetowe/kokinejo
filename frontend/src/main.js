@@ -6,6 +6,7 @@ import KiK from "./components/KiK.vue";
 import Home from "./components/Home.vue";
 import NotFound from "./components/NotFound.vue";
 import { createRouter, createWebHashHistory } from 'vue-router';
+import { store } from "./store";
 
 const app = createApp(App)
 
@@ -43,5 +44,6 @@ const router = createRouter ({
     linkActiveClass: 'is-active',
 })
 app.use(router);
+app.use(store);
 
 app.mount('#app')
