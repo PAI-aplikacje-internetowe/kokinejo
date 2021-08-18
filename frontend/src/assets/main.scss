@@ -1,0 +1,54 @@
+$red: #dc1a22;
+$red-dark: #8f090d;
+$white: #fff;
+$green-dark: #008f26;
+$green: #1adb4d;
+$yellow: #ecd386;
+
+$primary: $red;
+
+$navbar-item-img-max-height: 4rem;
+$navbar-item-color: $red;
+$navbar-item-hover-color: $red-dark;
+
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#the-header {
+
+  #navbar {
+    //background-color: $red;
+
+    .button {
+      margin-left: 0;
+    }
+
+    .button.is-dark {
+      background-color: $red-dark;
+    }
+
+    #navbar-logo.is-active {
+      background-color: $red;
+    }
+  }
+
+  //.navbar-item img {
+  //  max-height: 4rem;
+  //}
+}
+
+#home-section {
+  max-width: 1440px;
+}
+
+.play-button {
+  background-color: $yellow;
+}
+
+// Bulma Import
+@import "./node_modules/bulma/bulma";
+

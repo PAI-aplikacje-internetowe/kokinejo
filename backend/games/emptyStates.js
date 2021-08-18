@@ -6,6 +6,7 @@
  * When a game starts (by /ready request) the game state is overridden
  * with a new empty state.
  */
+const Cards = require('./Cards');
 
 const emptyStates = {
     kik: () => {
@@ -18,10 +19,14 @@ const emptyStates = {
         }
     },
     crazyEight: () => {
+        let shuffledDeck = Cards.shuffledFullDeck;
         return {
             started: false,
             currentPlayer: null,
             winner: null,
+            stockPile: shuffledDeck,
+            discardPile: [],
+            playersHands: []
         }
     },
     solitaire: () => {
