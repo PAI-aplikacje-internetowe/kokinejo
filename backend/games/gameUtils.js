@@ -215,7 +215,7 @@ function gameUtilsFactory(gameName) {
 
     function setJoinabale(value, gameId) {
         let valueToInsert = value ? 1 : 0;
-        const stmt = db.prepare(`UPDATE kik
+        const stmt = db.prepare(`UPDATE ${gameUtils.tableName}
                                  SET joinable = ?
                                  WHERE id = ?`);
         const info = stmt.run(valueToInsert, gameId);
