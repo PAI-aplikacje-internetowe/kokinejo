@@ -71,32 +71,34 @@ function gameUtilsFactory(gameName) {
     function availableGamesQuery() {
         switch (info.maxPlayers) {
             case(1):
-                return `SELECT ${gameUtils.tableName}.id, (u1.name) as players
+                return `SELECT ${gameUtils.tableName}.id, u1.name as u1_name
                         FROM ${gameUtils.tableName}
-                                 JOIN users u1 on u1.id == ${gameUtils.tableName}.user1_id
+                                 LEFT JOIN users u1 on u1.id == ${gameUtils.tableName}.user1_id
                         WHERE ${gameUtils.tableName}.joinable == true`;
             case(2):
-                return `SELECT ${gameUtils.tableName}.id, (u1.name || ' ' || u2.name) as players
+                return `SELECT ${gameUtils.tableName}.id, u1.name as u1_name, u2.name as u2_name
                         FROM ${gameUtils.tableName}
-                                 JOIN users u1 on u1.id == ${gameUtils.tableName}.user1_id
-                                 JOIN users u2 on u2.id == ${gameUtils.tableName}.user2_id
+                                 LEFT JOIN users u1 on u1.id == ${gameUtils.tableName}.user1_id
+                                 LEFT JOIN users u2 on u2.id == ${gameUtils.tableName}.user2_id
                         WHERE ${gameUtils.tableName}.joinable == true`;
             case(3):
-                return `SELECT ${gameUtils.tableName}.id,
-                               (u1.name || ' ' || u2.name || ' ' || u3.name) as players
+                return `SELECT ${gameUtils.tableName}.id, u1.name as u1_name, u2.name as u2_name, u3.name as u3_name
                         FROM ${gameUtils.tableName}
-                                 JOIN users u1 on u1.id == ${gameUtils.tableName}.user1_id
-                                 JOIN users u2 on u2.id == ${gameUtils.tableName}.user2_id
-                                 JOIN users u3 on u3.id == ${gameUtils.tableName}.user3_id
+                                 LEFT JOIN users u1 on u1.id == ${gameUtils.tableName}.user1_id
+                                 LEFT JOIN users u2 on u2.id == ${gameUtils.tableName}.user2_id
+                                 LEFT JOIN users u3 on u3.id == ${gameUtils.tableName}.user3_id
                         WHERE ${gameUtils.tableName}.joinable == true`;
             case(4):
                 return `SELECT ${gameUtils.tableName}.id,
-                               (u1.name || ' ' || u2.name || ' ' || u3.name || ' ' || u4.name) as players
+                               u1.name as u1_name,
+                               u2.name as u2_name,
+                               u3.name as u3_name,
+                               u4.name as u4_name
                         FROM ${gameUtils.tableName}
-                                 JOIN users u1 on u1.id == ${gameUtils.tableName}.user1_id
-                                 JOIN users u2 on u2.id == ${gameUtils.tableName}.user2_id
-                                 JOIN users u3 on u3.id == ${gameUtils.tableName}.user3_id
-                                 JOIN users u4 on u4.id == ${gameUtils.tableName}.user4_id
+                                 LEFT JOIN users u1 on u1.id == ${gameUtils.tableName}.user1_id
+                                 LEFT JOIN users u2 on u2.id == ${gameUtils.tableName}.user2_id
+                                 LEFT JOIN users u3 on u3.id == ${gameUtils.tableName}.user3_id
+                                 LEFT JOIN users u4 on u4.id == ${gameUtils.tableName}.user4_id
                         WHERE ${gameUtils.tableName}.joinable == true`;
         }
     }
@@ -263,11 +265,18 @@ function gameUtilsFactory(gameName) {
 
         // todo wl: poprawić czytelność
         const rows = stmt.all();
+        console.log(rows);
         return rows.map(row => {
-            let players = row.players.split(' ');
+            let players = []
+            for (let i = 1; i <= gameUtils.maxPlayers; i++) {
+                let key = `u${i}_name`;
+                if (row[key] != null) {
+                    players.push(row[key]);
+                }
+            }
             return {
                 id: row.id,
-                players: players,
+                players: players.join(', '),
             }
         });
     }
