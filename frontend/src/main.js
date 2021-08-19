@@ -6,7 +6,8 @@ import KiK from "./components/KiK.vue";
 import Home from "./components/Home.vue";
 import NotFound from "./components/NotFound.vue";
 import { createRouter, createWebHashHistory } from 'vue-router';
-import { store } from "./store";
+import {store} from "./store";
+import AvailableGamesList from "./components/AvailableGamesList.vue";
 
 const app = createApp(App)
 
@@ -17,19 +18,25 @@ const routes= [
         component: Home,
     },
     {
-        path: '/kik',
-        name: 'kik',
-        component: KiK_available_games
-    },
-    {
         path: '/kik/game/:id',
         name: 'game',
         component: KiK,
     },
     {
+        path: '/kik',
+        name: 'kik',
+        component: AvailableGamesList,
+        props: {
+            gameName: 'kółko i krzyżyk',
+        },
+    },
+    {
         path: '/crazy-eights',
         name: 'crazy-eights',
-        component: CrazyEights
+        component: AvailableGamesList,
+        props: {
+            gameName: 'crazy eights',
+        },
     },
     {
         path: '/:pathMatch(.*)*',
