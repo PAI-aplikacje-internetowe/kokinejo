@@ -14,6 +14,8 @@ const get = (url) => {
 const post = (url, data) => {
     return fetch(url, {
         method: 'POST',
+        mode: 'cors',
+        credentials: 'same-origin',
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',

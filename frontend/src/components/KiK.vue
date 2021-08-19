@@ -64,6 +64,8 @@
 
 <script>
 
+import {get, post} from "../fetchUtils";
+
 export default {
 
   data() {
@@ -100,7 +102,7 @@ export default {
       this.error = this.state = null
       this.loading = true
       const gameId = this.$route.params.id
-      await fetch('http://localhost:3000/kik/' + gameId + '/state')
+      await get('http://localhost:3000/kik/' + gameId + '/state')
           .then(response => response.json())
           .then(data => {
             if(data.status === "error"){
@@ -127,7 +129,7 @@ export default {
       this.error = null
       this.users = []
       const gameId = this.$route.params.id
-      await fetch('http://localhost:3000/kik/' + gameId + '/join?userId=' + this.user_id)
+      await get('http://localhost:3000/kik/' + gameId + '/join?userId=' + this.user_id)
           .then(response => response.json())
           .then(data => {
             if(data.status === "error"){
@@ -143,7 +145,7 @@ export default {
     async leave() {
       this.error = null
       const gameId = this.$route.params.id
-      await fetch('http://localhost:3000/kik/' + gameId + '/leave?userId=' + this.user_id)
+      await get('http://localhost:3000/kik/' + gameId + '/leave?userId=' + this.user_id)
           .then(response => response.json())
           .catch(err => console.error(err))
     },
@@ -151,7 +153,7 @@ export default {
     async startGame() {
       this.error = null
       const gameId = this.$route.params.id
-      await fetch('http://localhost:3000/kik/' + gameId + '/ready')
+      await get('http://localhost:3000/kik/' + gameId + '/ready')
           .then(response => response.json())
           .catch(err => console.error(err))
     },
@@ -159,16 +161,9 @@ export default {
     async makeMove() {
       this.error = this.moveValue = null
       const gameId = this.$route.params.id
-      await fetch('http://localhost:3000/kik/' + gameId + '/make_move', {
-        method: 'POST',
-        mode: 'cors',
-        credentials: 'same-origin',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': 'origin-list',
-        },
-        body: JSON.stringify({playerId: parseInt(this.user_id), move: this.field_id})
+      await post('http://localhost:3000/kik/' + gameId + '/make_move', {
+        playerId: parseInt(this.user_id),
+        move: this.field_id
       })
           .then(response => response.json())
           .then(data => {
