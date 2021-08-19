@@ -22,7 +22,8 @@ class BaseGameController {
     index = (req, res) => {
         res.json({
             gameName: this.gameUtils.gameName,
-            players: this.gameUtils.playerCount
+            minPlayers: this.gameUtils.minPlayers,
+            maxPlayers: this.gameUtils.maxPlayers,
         })
     }
 
@@ -31,7 +32,8 @@ class BaseGameController {
             const availableGames = this.gameUtils.availableGames();
             res.json({
                 status: "ok",
-                availableGames: availableGames
+                availableGames: availableGames,
+                maxPlayers: this.gameUtils.maxPlayers,
             });
         } catch (e) {
             utils.badRequest(res, e, "Available games");

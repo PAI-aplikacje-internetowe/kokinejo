@@ -58,11 +58,47 @@ function gameUtilsFactory(gameName) {
         ready: ready,
     }
 
+    // for 3 players game: [user1_id, user2_id, user3_id]
     let userIdFieldsName = [];
+    // for 3 players game: [null, null, null] - used when populating database
     let userIdPlaceholders = []
     for (let i = 1; i <= info.maxPlayers; i++) {
         userIdFieldsName.push(`user${i}_id`);
         userIdPlaceholders.push('null');
+    }
+
+    // very ugly but readable and only one query - optimisations
+    function availableGamesQuery() {
+        switch (info.maxPlayers) {
+            case(1):
+                return `SELECT ${gameUtils.tableName}.id, (u1.name) as players
+                        FROM ${gameUtils.tableName}
+                                 JOIN users u1 on u1.id == ${gameUtils.tableName}.user1_id
+                        WHERE ${gameUtils.tableName}.joinable == true`;
+            case(2):
+                return `SELECT ${gameUtils.tableName}.id, (u1.name || ' ' || u2.name) as players
+                        FROM ${gameUtils.tableName}
+                                 JOIN users u1 on u1.id == ${gameUtils.tableName}.user1_id
+                                 JOIN users u2 on u2.id == ${gameUtils.tableName}.user2_id
+                        WHERE ${gameUtils.tableName}.joinable == true`;
+            case(3):
+                return `SELECT ${gameUtils.tableName}.id,
+                               (u1.name || ' ' || u2.name || ' ' || u3.name) as players
+                        FROM ${gameUtils.tableName}
+                                 JOIN users u1 on u1.id == ${gameUtils.tableName}.user1_id
+                                 JOIN users u2 on u2.id == ${gameUtils.tableName}.user2_id
+                                 JOIN users u3 on u3.id == ${gameUtils.tableName}.user3_id
+                        WHERE ${gameUtils.tableName}.joinable == true`;
+            case(4):
+                return `SELECT ${gameUtils.tableName}.id,
+                               (u1.name || ' ' || u2.name || ' ' || u3.name || ' ' || u4.name) as players
+                        FROM ${gameUtils.tableName}
+                                 JOIN users u1 on u1.id == ${gameUtils.tableName}.user1_id
+                                 JOIN users u2 on u2.id == ${gameUtils.tableName}.user2_id
+                                 JOIN users u3 on u3.id == ${gameUtils.tableName}.user3_id
+                                 JOIN users u4 on u4.id == ${gameUtils.tableName}.user4_id
+                        WHERE ${gameUtils.tableName}.joinable == true`;
+        }
     }
 
     function userIdsString() {
@@ -223,23 +259,15 @@ function gameUtilsFactory(gameName) {
     }
 
     function availableGames() {
-        const stmt = db.prepare(`SELECT id, ${userIdsString()}
-                                 FROM ${gameUtils.tableName}
-                                 WHERE joinable == true`);
+        const stmt = db.prepare(availableGamesQuery())
 
         // todo wl: poprawić czytelność
         const rows = stmt.all();
         return rows.map(row => {
-            let userIds = [];
-            for (let i = 1; i <= gameUtils.maxPlayers; i++) {
-                let key = `user${i}_id`;
-                if (row.hasOwnProperty(key)) {
-                    userIds.push(row[key]);
-                }
-            }
+            let players = row.players.split(' ');
             return {
                 id: row.id,
-                userIds: userIds
+                players: players,
             }
         });
     }
