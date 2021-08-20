@@ -265,7 +265,6 @@ function gameUtilsFactory(gameName) {
 
         // todo wl: poprawić czytelność
         const rows = stmt.all();
-        console.log(rows);
         return rows.map(row => {
             let players = []
             for (let i = 1; i <= gameUtils.maxPlayers; i++) {
