@@ -7,6 +7,8 @@
 const app = require('../app');
 const debug = require('debug')('backend:server');
 const http = require('http');
+const {Server} = require("socket.io");
+const {authMiddleware, getSockets} = require("../sockets");
 
 /**
  * Get port from environment and store in Express.
@@ -20,6 +22,7 @@ app.set('port', port);
  */
 
 const server = http.createServer(app);
+initMainSocketNamespace();
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -33,7 +36,6 @@ server.on('listening', onListening);
 /**
  * Normalize a port into a number, string, or false.
  */
-
 function normalizePort(val) {
   const port = parseInt(val, 10);
 
@@ -53,7 +55,6 @@ function normalizePort(val) {
 /**
  * Event listener for HTTP server "error" event.
  */
-
 function onError(error) {
   if (error.syscall !== 'listen') {
     throw error;
@@ -81,11 +82,26 @@ function onError(error) {
 /**
  * Event listener for HTTP server "listening" event.
  */
-
 function onListening() {
   app.init();
   const addr = server.address();
   const port = addr.port;
   const address = addr.family == 'IPv4' ? addr.address : `[${addr.address}]`
   console.debug(`Listening on http://${address}:${port}`);
+}
+
+function initMainSocketNamespace() {
+  global.sockets = new Server(server, {
+    cors: {
+      origin: "http://localhost:8080",
+      methods: ['GET', 'POST'],
+    },
+    serveClient: false,
+  });
+
+  sockets.use(authMiddleware);
+  sockets.on('connection', (socket) => {
+    console.log("Someone connected with global namespace, disconnecting");
+    socket.disconnect();
+  });
 }
