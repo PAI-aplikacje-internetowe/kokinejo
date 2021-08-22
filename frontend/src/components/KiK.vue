@@ -64,7 +64,8 @@
 
 <script>
 
-import {get, post} from "../fetchUtils";
+import { get, post } from "../fetchUtils";
+import { getSocket } from "../socketUtils";
 
 export default {
 
@@ -81,6 +82,7 @@ export default {
       users: [],
       firstState: false,
       messageFromBackend: null,
+      socket: null,
     };
   },
 
@@ -88,9 +90,6 @@ export default {
     this.msg = 'Kółko i krzyżyk gra';
     this.getState();
     this.firstState = true;
-    setInterval(() => {
-      this.getState()
-    }, 1000);
   },
 
   watch: {
@@ -129,23 +128,31 @@ export default {
       this.error = null
       this.users = []
       const gameId = this.$route.params.id
-      await get('http://localhost:3000/kik/' + gameId + '/join?userId=' + this.user_id)
+      await get('http://localhost:3000/kik/' + gameId + '/join')
           .then(response => response.json())
           .then(data => {
             if(data.status === "error"){
               this.error = data.error
             } else {
               this.users = data.userIds
+              this.socket = getSocket('tic-tac-toe', gameId);
+              this.initListeners();
             }
           })
           .catch(err => console.error((err)))
       console.log(this.users)
     },
 
+    initListeners() {
+      this.socket.on('gameStarted', () => {
+        console.log("Starting game!");
+      })
+    },
+
     async leave() {
       this.error = null
       const gameId = this.$route.params.id
-      await get('http://localhost:3000/kik/' + gameId + '/leave?userId=' + this.user_id)
+      await get('http://localhost:3000/kik/' + gameId + '/leave')
           .then(response => response.json())
           .catch(err => console.error(err))
     },
@@ -153,6 +160,7 @@ export default {
     async startGame() {
       this.error = null
       const gameId = this.$route.params.id
+      this.socket.emit('gameStart', gameId);
       await get('http://localhost:3000/kik/' + gameId + '/ready')
           .then(response => response.json())
           .catch(err => console.error(err))
