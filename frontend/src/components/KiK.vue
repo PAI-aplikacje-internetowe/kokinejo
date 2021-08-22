@@ -66,8 +66,9 @@
 
 import { get, post } from "../fetchUtils";
 import { getSocket } from "../socketUtils";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
 
   data() {
     return {
@@ -207,7 +208,7 @@ export default {
       }
     }
   }
-};
+});
 
 </script>
 
