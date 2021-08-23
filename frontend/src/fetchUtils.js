@@ -3,6 +3,9 @@ import { store } from "./store";
 const get = (url) => {
     return fetch(url, {
         method: 'GET',
+        cache: 'no-cache',
+        'cache-control': 'no-cache',
+        pragma: 'no-cache',
         headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
