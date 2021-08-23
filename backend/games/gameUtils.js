@@ -55,6 +55,7 @@ function gameUtilsFactory(gameName) {
         availableGames: availableGames,
         joinGame: joinGame,
         leaveGame: leaveGame,
+        playerLeft: playerLeft,
         ready: ready,
     }
 
@@ -221,26 +222,33 @@ function gameUtilsFactory(gameName) {
         return usersArray.indexOf(null) !== -1;
     }
 
-    function leaveGame(gameId, playerId) {
-        // TODO: jeżeli ktoś opuści to zresetować stan
+    function playerLeft(gameId, playerId) {
         const row = getRow(gameId);
-        if (playerId < 1) {
-            throw Error("Wrong user id");
-        }
         if (!row.userIds.includes(playerId)) {
             throw Error(`User ${playerId} is not present in ${gameUtils.gameName}:${gameId}`);
         }
-
         const seatToFree = row.userIds.indexOf(playerId) + 1;
         if (!row.joinable) {
             setJoinabale(true, gameId);
         }
 
         const stmt = db.prepare(`UPDATE ${gameUtils.tableName}
-                                 SET user${seatToFree}_id = ?
+                                 SET user${seatToFree}_id = ?,
+                                     state = ?
                                  WHERE id = ?`);
-        const info = stmt.run(null, gameId);
-        console.debug(`${gameUtils.gameName}:${gameId}, player ${playerId} left, changed ${info.changes} rows`);
+
+        let emptyStateString = JSON.stringify(info.emptyStateFn())
+        const dbInfo = stmt.run(null, emptyStateString, gameId);
+        console.debug(`${gameUtils.gameName}:${gameId}, player ${playerId} left, changed ${dbInfo.changes} rows`);
+
+    }
+
+    function leaveGame(gameId, playerId) {
+        if (playerId < 1) {
+            throw Error("Wrong user id");
+        }
+
+        playerLeft(gameId, playerId);
 
         const newRow = getRow(gameId);
 

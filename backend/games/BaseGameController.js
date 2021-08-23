@@ -31,13 +31,18 @@ class BaseGameController {
       socket.data.gameId = gameId;
       socket.join(gameId);
 
-      socket.on('gameStart', (gameId) => {
-        console.log("starting game: " + this.gameUtils.gameName + " id: " + gameId)
-        // broadcast from socket to room - everyone except sender receives
-        socket.to(gameId).emit('gameStarted');
-        // sockets.to(gameId).emit(...) - everyone in the room gets event, even the sender
+      sockets.to(gameId).emit('pullState');
+
+      // event handlers
+      socket.on('disconnect', () => {
+        socket.to(gameId).emit('userDisconnected', socket.data.user.name);
+        this.gameUtils.playerLeft(gameId, socket.data.user.id);
       })
-    })
+
+      socket.on('gameStart', (gameId) => {
+        sockets.to(gameId).emit('pullState');
+      })
+    });
   }
 
   getRouter = () => {
