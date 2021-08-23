@@ -27,7 +27,7 @@ const routes= [
         name: 'kik',
         component: AvailableGamesList,
         props: {
-            gameName: 'kółko i krzyżyk',
+            gameName: 'tic-tac-toe',
         },
     },
     {
