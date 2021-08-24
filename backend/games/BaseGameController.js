@@ -15,12 +15,14 @@ class BaseGameController {
     this.router.get('/:gameId/ready', this.setReady);
     this.router.get('/:gameId/state', this.getState);
     this.socketInitialized = false;
+    this.sockets = null;
   }
 
   initSocket = () => {
     console.log("initializing " + this.gameUtils.gameName + " sockets");
 
     const sockets = getSockets(this.gameUtils.gameName)
+    this.sockets = sockets;
 
     sockets.on('connect', socket => {
       const gameId = socket.handshake.query.gameId;
@@ -71,11 +73,6 @@ class BaseGameController {
   }
 
   join = (req, res) => {
-    // todo: ugly, slowing down hack - how it can be improved?
-    if (!this.socketInitialized) {
-      this.initSocket();
-      this.socketInitialized = true;
-    }
     const gameId = req.params.gameId;
 
     const user = req.user;
@@ -86,6 +83,7 @@ class BaseGameController {
     try {
       const userId = user.id;
       const data = this.gameUtils.joinGame(gameId, userId);
+      this.sockets.emit('pullState');
       res.json(data)
     } catch (e) {
       utils.badRequest(res, e);
@@ -103,6 +101,7 @@ class BaseGameController {
     try {
       const userId = user.id;
       const data = this.gameUtils.leaveGame(gameId, userId);
+      this.sockets.emit('pullState');
       res.json(data)
     } catch (e) {
       utils.badRequest(res, e);
@@ -114,6 +113,7 @@ class BaseGameController {
 
     try {
       const data = this.gameUtils.ready(gameId)
+      this.sockets.emit('pullState');
       res.json(data);
     } catch (e) {
       utils.badRequest(res, e);
@@ -121,6 +121,11 @@ class BaseGameController {
   }
 
   getState = (req, res) => {
+    // todo: ugly, slowing down hack - how it can be improved?
+    if (!this.socketInitialized) {
+      this.initSocket();
+      this.socketInitialized = true;
+    }
     const gameId = req.params.gameId;
 
     try {

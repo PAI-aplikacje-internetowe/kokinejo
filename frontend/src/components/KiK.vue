@@ -4,44 +4,44 @@
     <h2
         v-if="users"
         class="subtitle"
-      >
+    >
       Players: {{ userList }}
     </h2>
     <div class="menu">
+      <div class="buttons">
 
-      <template v-if="joined">
-        <input type="button" class="button is-success is-disabled" value="Joined"/>
-        <template v-if="!started">
-          <input type="button" class="button" value="START" v-on:click="this.startGame"/>
-        </template>
-      </template>
-      <template v-else>
-        <input type="button" class="button" value="Join game" v-on:click="this.join"/>
-      </template>
+        <input v-if="joined" disabled type="button" class="button is-success" value="Joined"/>
+        <input v-else type="button" class="button" value="Join game" v-on:click="this.join"/>
 
-      <input type="button" class="button" value="Leave" v-on:click="this.leave"/>
+        <input v-if="canStart" type="button" class="button" value="Start" v-on:click="this.startGame"/>
+        <input v-else-if="started" disabled type="button" class="button" value="Started"/>
+        <input v-else disabled type="button" class="button" value="Start"/>
+
+        <input v-if="joined" type="button" class="button" value="Leave" v-on:click="this.leave"/>
+        <input v-else disabled type="button" class="button" value="Leave"/>
+      </div>
     </div>
     <br><br>
-      <div id="loader" class="pageloader is-active"><span class="title">Loading game</span></div>
-      <div>
-        <table>
-          <tr>
-            <td id="0" v-on:click="this.clickHandler">{{ values[0] }}</td>
-            <td id="1" v-on:click="this.clickHandler" class="vert">{{ values[1] }}</td>
-            <td id="2" v-on:click="this.clickHandler">{{ values[2] }}</td>
-          </tr>
-          <tr>
-            <td id="3" v-on:click="this.clickHandler" class="hori">{{ values[3] }}</td>
-            <td id="4" v-on:click="this.clickHandler" class="vert hori">{{ values[4] }}</td>
-            <td id="5" v-on:click="this.clickHandler" class="hori">{{ values[5] }}</td>
-          </tr>
-          <tr>
-            <td id="6" v-on:click="this.clickHandler">{{ values[6] }}</td>
-            <td id="7" v-on:click="this.clickHandler" class="vert">{{ values[7] }}</td>
-            <td id="8" v-on:click="this.clickHandler">{{ values[8] }}</td>
-          </tr>
-        </table>
-      </div>
+    <div id="loader" class="pageloader is-active"><span class="title">Loading game</span></div>
+    <div>
+      <table>
+        <tr>
+          <td id="0" v-on:click="this.clickHandler">{{ values[0] }}</td>
+          <td id="1" v-on:click="this.clickHandler" class="vert">{{ values[1] }}</td>
+          <td id="2" v-on:click="this.clickHandler">{{ values[2] }}</td>
+        </tr>
+        <tr>
+          <td id="3" v-on:click="this.clickHandler" class="hori">{{ values[3] }}</td>
+          <td id="4" v-on:click="this.clickHandler" class="vert hori">{{ values[4] }}</td>
+          <td id="5" v-on:click="this.clickHandler" class="hori">{{ values[5] }}</td>
+        </tr>
+        <tr>
+          <td id="6" v-on:click="this.clickHandler">{{ values[6] }}</td>
+          <td id="7" v-on:click="this.clickHandler" class="vert">{{ values[7] }}</td>
+          <td id="8" v-on:click="this.clickHandler">{{ values[8] }}</td>
+        </tr>
+      </table>
+    </div>
     <br>
   </section>
 </template>
@@ -53,6 +53,7 @@ import {getSocket} from "../socketUtils";
 import {defineComponent} from "vue";
 
 export default defineComponent({
+  props: ['minPlayers', 'maxPlayers'],
 
   data() {
     return {
@@ -80,11 +81,17 @@ export default defineComponent({
       } else {
         return "none yet"
       }
+    },
+    canStart() {
+      const usersJoined = this.users.filter(Boolean).length;
+      return !this.started && usersJoined >= this.minPlayers
     }
   },
 
   created() {
     this.getState();
+    this.socket = getSocket('tic-tac-toe', this.gameId);
+    this.initListeners();
   },
 
   watch: {
@@ -133,9 +140,10 @@ export default defineComponent({
             if (data.status === "error") {
               this.error = data.error
             } else {
-              this.socket = getSocket('tic-tac-toe', this.gameId);
+              console.log(data);
+              this.state = data.gameState;
+              this.users = data.userIds;
               this.joined = true;
-              this.initListeners();
             }
           })
           .catch(err => console.error((err)))
@@ -159,15 +167,31 @@ export default defineComponent({
       this.error = null
       await get('http://localhost:3000/kik/' + this.gameId + '/leave')
           .then(response => response.json())
+          .then(data => {
+            if (data.status === "error") {
+              this.error = data.error
+            } else {
+              this.state = data.gameState;
+              this.users = data.userIds;
+              this.joined = false;
+            }
+          })
           .catch(err => console.error(err))
     },
 
     async startGame() {
       this.error = null
-      this.socket.emit('gameStart', this.gameId);
       this.started = true;
       await get('http://localhost:3000/kik/' + this.gameId + '/ready')
           .then(response => response.json())
+          .then(data => {
+            if (data.status === "error") {
+              this.error = data.error
+            } else {
+              this.state = data.gameState;
+              this.users = data.userIds;
+            }
+          })
           .catch(err => console.error(err))
     },
 
@@ -234,6 +258,6 @@ table {
 }
 
 .button {
-  margin-left: 50px;
+  width: 100px;
 }
 </style>

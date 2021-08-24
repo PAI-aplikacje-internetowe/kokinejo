@@ -21,6 +21,10 @@ const routes= [
         path: '/kik/game/:id',
         name: 'game',
         component: KiK,
+        props: {
+            minPlayers: 2,
+            maxPlayers: 2,
+        },
     },
     {
         path: '/kik',
