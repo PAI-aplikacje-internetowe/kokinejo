@@ -110,9 +110,10 @@ class BaseGameController {
 
   setReady = (req, res) => {
     const gameId = req.params.gameId;
+    const userId = req.user.id;
 
     try {
-      const data = this.gameUtils.ready(gameId)
+      const data = this.gameUtils.ready(gameId, userId)
       this.sockets.emit('pullState');
       res.json(data);
     } catch (e) {

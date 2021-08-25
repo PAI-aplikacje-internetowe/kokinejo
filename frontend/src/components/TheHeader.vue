@@ -108,7 +108,7 @@ export default defineComponent({
           .then(data => {
             this.$store.commit('setMyData', data);
           })
-          .catch(err => console.err(err))
+          .catch(err => console.error(err))
     },
   }
 })

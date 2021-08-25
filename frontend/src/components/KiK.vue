@@ -85,8 +85,11 @@ export default defineComponent({
       }
     },
     canStart() {
-      const usersJoined = this.users.filter(Boolean).length;
-      return !this.started && usersJoined >= this.minPlayers
+      const usersJoined = this.users.filter(Boolean);
+      const myId = this.$store.state.myId;
+      return !this.started
+          && usersJoined.indexOf(myId) !== -1
+          && usersJoined.length >= this.minPlayers
     },
     areFreeSeats() {
       const usersJoined = this.users.filter(Boolean).length;

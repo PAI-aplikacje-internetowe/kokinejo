@@ -166,7 +166,7 @@ function gameUtilsFactory(gameName) {
         console.debug(`${gameUtils.gameName}, set state, changed ${info.changes} rows`);
     }
 
-    function ready(gameId) {
+    function ready(gameId, userId) {
         const row = getRow(gameId);
 
         const playersInGame = row.userIds.reduceRight((acc, u) => u != null ? acc + 1 : acc, 0)
@@ -177,6 +177,10 @@ function gameUtilsFactory(gameName) {
         const oldGameState = row.gameState;
         if (oldGameState.started) {
             throw Error(`${gameUtils.gameName}:${gameId} already started`);
+        }
+
+        if (row.userIds.indexOf(userId) === -1) {
+            throw Error(`${gameUtils.gameName}:${gameId}, not joined user of id ${userId} can't start game`);
         }
 
         let newState = info.emptyStateFn();
