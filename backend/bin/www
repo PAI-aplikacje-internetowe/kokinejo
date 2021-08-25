@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 
+const config = require('dotenv').config();
 const app = require('../app');
 const debug = require('debug')('backend:server');
 const http = require('http');
@@ -93,7 +94,7 @@ function onListening() {
 function initMainSocketNamespace() {
   global.sockets = new Server(server, {
     cors: {
-      origin: "http://localhost:8080",
+      origin: process.env.ALLOW_LIST.split(','),
       methods: ['GET', 'POST'],
     },
     serveClient: false,
