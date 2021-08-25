@@ -44,7 +44,15 @@ class BaseGameController {
       socket.on('gameStart', (gameId) => {
         sockets.to(gameId).emit('pullState');
       })
+
+      socket.on('move', (data) => {
+        this.moveHandler(data, socket);
+      });
     });
+  }
+
+  moveHandler = (data, socket) => {
+    console.error("Not implemented moveHandler for " + this.gameUtils.gameName + " sockets");
   }
 
   getRouter = () => {

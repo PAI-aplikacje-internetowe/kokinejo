@@ -4,31 +4,23 @@ const utils = require('./../utils');
 class Kik extends BaseGameController {
     constructor() {
         super('tic-tac-toe');
-        this.getRouter().post('/:gameId/make_move', this.makeMove);
     }
 
-    makeMove = (req, res) => {
-        const gameId = req.params.gameId;
+    moveHandler = (data, socket) => {
+        const gameId = data.gameId;
+        const fieldId = data.fieldId;
+        const playerId = socket.data.user.id;
 
-        let bodyErrors = findBodyErrors();
-        if (bodyErrors.length) {
-            utils.badRequest(res, new Error(bodyErrors));
-            return;
-        }
-
-        const playerId = req.body.playerId;
-        const move = req.body.move;
         const gameData = this.gameUtils.data(gameId);
 
         try {
             validateMove(gameData);
         } catch (e) {
-            utils.badRequest(res, e);
             return;
         }
 
         let newState = gameData.gameState;
-        newState.board[move] = getPlayerSymbol(playerId, gameData.userIds);
+        newState.board[fieldId] = getPlayerSymbol(playerId, gameData.userIds);
 
         let winningCombo = findWinningCombo(newState.board);
 
@@ -46,10 +38,7 @@ class Kik extends BaseGameController {
 
         this.gameUtils.setState(gameId, newState);
 
-        res.json({
-            status: "ok",
-            gameState: this.gameUtils.data(gameId).gameState
-        });
+        this.sockets.to(gameId).emit('pullState');
 
         // ------------- helper game logic functions
 
@@ -67,8 +56,8 @@ class Kik extends BaseGameController {
             if (gameState.currentPlayer !== playerId) {
                 throw new Error(`kik:${gameId} ${playerId} is not current player`);
             }
-            if (gameState.board[move] !== 0) {
-                throw new Error(`kik:${gameId} field ${move} is not empty`);
+            if (gameState.board[fieldId] !== 0) {
+                throw new Error(`kik:${gameId} field ${fieldId} is not empty`);
             }
             return true;
         }
@@ -107,32 +96,6 @@ class Kik extends BaseGameController {
             } else {
                 return gameData.userIds[1];
             }
-        }
-
-        function findBodyErrors() {
-            let errors = [];
-            let body = req.body;
-
-            if (!body.hasOwnProperty('playerId')) {
-                errors.push("missing playerId property");
-            } else if (!parseInt(body.playerId)) {
-                errors.push("playerId is not a number");
-            }
-
-            if (!body.hasOwnProperty('move')) {
-                errors.push("missing move property");
-            } else {
-                let parsed = parseInt(body.move);
-                if (!isCoordinateInRange(parsed)) {
-                    errors.push(`move is out of range`);
-                }
-            }
-
-            function isCoordinateInRange(coordinate) {
-                return 0 <= coordinate && coordinate <= 8;
-            }
-
-            return errors;
         }
     }
 }

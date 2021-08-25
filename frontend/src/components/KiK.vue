@@ -44,6 +44,20 @@
         </tr>
       </table>
     </div>
+
+    <div id="winner-modal" class="modal">
+      <div class="modal-background" v-on:click="this.closeWinnerModal"></div>
+      <div class="modal-card">
+        <header class="modal-card-head">
+          <p class="modal-card-title">We have a winner!</p>
+          <button class="delete" aria-label="close" v-on:click="this.closeWinnerModal"></button>
+        </header>
+        <section class="modal-card-body">
+          <p>{{ winnerMessage }}</p>
+        </section>
+      </div>
+    </div>
+
     <br>
   </section>
 </template>
@@ -71,6 +85,7 @@ export default defineComponent({
       gameId: this.$route.params.id,
       started: false,
       gameEndpoint: '',
+      winnerId: null,
     };
   },
 
@@ -99,6 +114,13 @@ export default defineComponent({
       const usersJoined = this.users.filter(Boolean);
       const myId = this.$store.state.myId;
       return usersJoined.indexOf(myId) !== -1;
+    },
+    winnerMessage() {
+      if (this.winnerId === this.$store.state.myId) {
+        return "You have won! Congratulations!";
+      } else {
+        return `User with id ${this.winnerId} have one. Good luck next time!`;
+      }
     }
   },
 
@@ -112,6 +134,10 @@ export default defineComponent({
   watch: {
     state(newState, _) {
       this.started = newState.started;
+      if (newState.winner) {
+        this.winnerId = newState.winner;
+        this.endGameInfo(newState.winner);
+      }
     }
   },
 
@@ -134,7 +160,6 @@ export default defineComponent({
           })
           .catch(err => err => console.error(err))
       this.hideLoader();
-      this.endGameInfo()
       this.state.board.map((field, index) => {
         if (field === 0) {
           this.values[index] = null
@@ -212,30 +237,22 @@ export default defineComponent({
           .catch(err => console.error(err))
     },
 
-    async makeMove(field_id) {
+    async makeMove(fieldId) {
       this.error = this.moveValue = null
-      // todo: zmienić robienie ruchu na sockety
-      await post('http://localhost:3000/kik/' + this.gameId + '/make_move', {
-        move: field_id,
-      })
-          .then(response => response.json())
-          .then(data => {
-            if (data.status === "error") {
-              this.error = data.error
-            }
-          })
-          .catch(err => err => console.error(err))
-      console.log(this.field_id)
+      this.socket.emit("move", {
+        gameId: this.gameId,
+        fieldId: fieldId,
+      });
     },
 
     endGameInfo() {
-      // todo wyświetlić jakiś modal zamiast tego
-      if (this.state.winner !== null) {
-        this.messageFromBackend = "Wygrał gracz: " + this.state.winner + "!"
-      }
-      if (this.state.tied) {
-        this.messageFromBackend = "REMIS!"
-      }
+      const winnerModal = document.getElementById('winner-modal');
+      winnerModal.classList.add('is-active');
+    },
+
+    closeWinnerModal() {
+      const winnerModal = document.getElementById('winner-modal');
+      winnerModal.classList.remove('is-active');
     },
 
     clickHandler(event) {
