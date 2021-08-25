@@ -52,8 +52,17 @@ const store = createStore({
         clearToken(state) {
             delete state.token;
             saveData(state);
+    },
+    setMyData(state, data) {
+        if (debug) {
+            console.log("Setting new data:")
+            console.log(data);
         }
-    }
+        state.myName = data.name;
+        state.myId = data.id;
+        saveData(state);
+    },
+}
 })
 
 export { store };
