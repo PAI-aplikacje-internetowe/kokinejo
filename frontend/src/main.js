@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import KiK_available_games from "./components/KiK_available_games.vue"
 import CrazyEights from "./components/CrazyEights.vue";
 import KiK from "./components/KiK.vue";
 import Home from "./components/Home.vue";
@@ -10,6 +9,18 @@ import {store} from "./store";
 import AvailableGamesList from "./components/AvailableGamesList.vue";
 
 const app = createApp(App)
+
+const url = import.meta.env.VITE_ENDPOINT || `http://${window.location.hostname}:3000`;
+
+app.provide('ENDPOINT_INDEX', `${url}/`);
+app.provide('ENDPOINT_AUTH', `${url}/auth`);
+app.provide('ENDPOINT_AUTH_ME', `${url}/auth/me`);
+
+app.provide('ENDPOINT_CRAZY8', `${url}/crazy8`);
+app.provide('ENDPOINT_CRAZY8_AVAIL', `${url}/crazy8/available_games`);
+
+app.provide('ENDPOINT_KIK', `${url}/kik`);
+app.provide('ENDPOINT_KIK_AVAIL', `${url}/kik/available_games`);
 
 const routes= [
     {
@@ -32,6 +43,7 @@ const routes= [
         component: AvailableGamesList,
         props: {
             gameName: 'tic-tac-toe',
+            endpointKey: 'ENDPOINT_KIK_AVAIL',
         },
     },
     {
@@ -40,6 +52,7 @@ const routes= [
         component: AvailableGamesList,
         props: {
             gameName: 'crazy eights',
+            endpointKey: 'ENDPOINT_CRAZY8_AVAIL',
         },
     },
     {

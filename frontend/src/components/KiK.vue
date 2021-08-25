@@ -5,16 +5,18 @@
         v-if="users"
         class="subtitle"
     >
-      Players: {{ userList }}
+      <p>Players: {{ userList }}</p>
+      <p>MyId: {{ this.$store.state.myId }}</p>
     </h2>
     <div class="menu">
       <div class="buttons">
 
         <input v-if="joined" disabled type="button" class="button is-success" value="Joined"/>
-        <input v-else type="button" class="button" value="Join game" v-on:click="this.join"/>
+        <input v-else-if="areFreeSeats" type="button" class="button" value="Join game" v-on:click="this.join"/>
+        <input v-else disabled type="button" class="button" value="Join"/>
 
         <input v-if="canStart" type="button" class="button" value="Start" v-on:click="this.startGame"/>
-        <input v-else-if="started" disabled type="button" class="button" value="Started"/>
+        <input v-else-if="started" disabled type="button" class="button is-success" value="Started"/>
         <input v-else disabled type="button" class="button" value="Start"/>
 
         <input v-if="joined" type="button" class="button" value="Leave" v-on:click="this.leave"/>
@@ -50,7 +52,7 @@
 
 import {get, post} from "../fetchUtils";
 import {getSocket} from "../socketUtils";
-import {defineComponent} from "vue";
+import {defineComponent, inject} from "vue";
 
 export default defineComponent({
   props: ['minPlayers', 'maxPlayers'],
@@ -67,8 +69,8 @@ export default defineComponent({
       socket: null,
 
       gameId: this.$route.params.id,
-      joined: false,
       started: false,
+      gameEndpoint: '',
     };
   },
 
@@ -85,10 +87,20 @@ export default defineComponent({
     canStart() {
       const usersJoined = this.users.filter(Boolean).length;
       return !this.started && usersJoined >= this.minPlayers
+    },
+    areFreeSeats() {
+      const usersJoined = this.users.filter(Boolean).length;
+      return usersJoined < this.maxPlayers;
+    },
+    joined() {
+      const usersJoined = this.users.filter(Boolean);
+      const myId = this.$store.state.myId;
+      return usersJoined.indexOf(myId) !== -1;
     }
   },
 
   created() {
+    this.gameEndpoint = inject('ENDPOINT_KIK');
     this.getState();
     this.socket = getSocket('tic-tac-toe', this.gameId);
     this.initListeners();
@@ -101,9 +113,13 @@ export default defineComponent({
   },
 
   methods: {
+    url(endpoint) {
+      return this.gameEndpoint + '/' + this.gameId + endpoint;
+    },
+
     async getState() {
       this.error = null
-      await get('http://localhost:3000/kik/' + this.gameId + '/state')
+      await get(this.url('/state'))
           .then(response => response.json())
           .then(data => {
             if (data.status === "error") {
@@ -134,7 +150,7 @@ export default defineComponent({
 
     async join() {
       this.error = null
-      await get('http://localhost:3000/kik/' + this.gameId + '/join')
+      await get(this.url('/join'))
           .then(response => response.json())
           .then(data => {
             if (data.status === "error") {
@@ -143,7 +159,6 @@ export default defineComponent({
               console.log(data);
               this.state = data.gameState;
               this.users = data.userIds;
-              this.joined = true;
             }
           })
           .catch(err => console.error((err)))
@@ -165,7 +180,7 @@ export default defineComponent({
 
     async leave() {
       this.error = null
-      await get('http://localhost:3000/kik/' + this.gameId + '/leave')
+      await get(this.url('/leave'))
           .then(response => response.json())
           .then(data => {
             if (data.status === "error") {
@@ -173,7 +188,6 @@ export default defineComponent({
             } else {
               this.state = data.gameState;
               this.users = data.userIds;
-              this.joined = false;
             }
           })
           .catch(err => console.error(err))
@@ -182,7 +196,7 @@ export default defineComponent({
     async startGame() {
       this.error = null
       this.started = true;
-      await get('http://localhost:3000/kik/' + this.gameId + '/ready')
+      await get(this.url('/ready'))
           .then(response => response.json())
           .then(data => {
             if (data.status === "error") {

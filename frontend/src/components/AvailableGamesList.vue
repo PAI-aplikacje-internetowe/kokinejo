@@ -32,11 +32,11 @@
 
 
 <script>
-import {defineComponent} from "vue";
+import {defineComponent, inject} from "vue";
 import {get} from "../fetchUtils";
 
 export default defineComponent({
-  props: ['gameName'],
+  props: ['gameName', 'endpointKey'],
   methods: {
     occupiedSeats(players) {
       const countPlayers = () => {
@@ -59,7 +59,8 @@ export default defineComponent({
     };
   },
   created() {
-    get('http://localhost:3000' + this.$route.path + '/available_games')
+    const url = inject(this.endpointKey);
+    get(url)
         .then(response => response.json())
         .then(data => {
           this.gameLists = data.availableGames;

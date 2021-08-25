@@ -3,9 +3,12 @@ const path = require('path');
 const logger = require('morgan');
 const cors = require('cors');
 const debug = require('debug')('backend:app');
+const config = require('dotenv').config();
+
+const allowList = process.env.ALLOW_LIST.split(',');
 
 const corsOptions = {
-    origin: 'http://localhost:8080',
+    origin: allowList,
     optionsSuccessStatus: 200 // legacy browser support
 }
 

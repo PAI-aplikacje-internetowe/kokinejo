@@ -1,5 +1,6 @@
 import { store } from "./store";
 import { io } from "socket.io-client";
+import { inject } from "vue";
 
 /**
  * Create and open new socket with optional namespace
@@ -7,12 +8,12 @@ import { io } from "socket.io-client";
  * @returns {Socket|undefined}
  */
 const getSocket = (namespace = '', gameId) => {
+    const url = inject('ENDPOINT_INDEX');
     const token = 'Bearer ' + store.state.token;
     if (!token) {
         return undefined;
     }
-    // TODO: inject uri instead providing it hardcoded
-    return io('localhost:3000/' + namespace, {
+    return io(url + namespace, {
         extraHeaders: {
             Authorization: token,
         },

@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import {defineComponent} from "vue";
+import {defineComponent, inject} from "vue";
 import GameTile from "./GameTile.vue";
 
 export default defineComponent({
@@ -52,7 +52,8 @@ export default defineComponent({
     };
   },
   created() {
-    fetch('http://localhost:3000/')
+    const url = inject('ENDPOINT_INDEX');
+    fetch(url)
         .then(response => response.json())
         .then(data => (this.msg = data.powitanie))
         .catch(err => console.error(err));

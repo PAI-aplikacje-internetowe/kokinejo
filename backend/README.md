@@ -4,6 +4,11 @@
 
 `npm install` to install dependencies.
 
+Create `.env` file in the main directory (`/kokinejo/backend/.env`).
+You can use the `.env.template` file and leave only `localhost` part
+or you can add your local ip address in case you want to connect from
+other machine
+
 ## Running
 
 `./run.sh` in the main directory - it creates database 
