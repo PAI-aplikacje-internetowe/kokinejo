@@ -48,6 +48,7 @@
               </a>
             </div>
           </div>
+          <p class="navbar-item">Nick: {{ myName }}</p>
         </div>
 
         <div class="navbar-end">
@@ -90,6 +91,10 @@ export default defineComponent({
     loadToken() {
       const token = this.$store.state.token;
       return token || 'Token';
+    },
+    myName() {
+      const userName = this.$store.state.myName;
+      return userName || 'not logged in';
     }
   },
   methods: {

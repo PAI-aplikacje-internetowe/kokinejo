@@ -15,6 +15,8 @@ const loadData = (state) => {
         const data = JSON.parse(value);
         state.count = data.count;
         state.token = data.token;
+        state.myId = data.myId;
+        state.myName = data.myName;
     } catch (e) {
         // nothing stored, or wrong data - do nothing
     }
@@ -25,6 +27,8 @@ const saveData = (state) => {
         storage.setItem(KEY, JSON.stringify({
             count: state.count,
             token: state.token,
+            myId: state.myId,
+            myName: state.myName,
         }));
     } catch (e) {
         // do nothing, when there is no storage
@@ -52,17 +56,17 @@ const store = createStore({
         clearToken(state) {
             delete state.token;
             saveData(state);
-    },
-    setMyData(state, data) {
-        if (debug) {
-            console.log("Setting new data:")
-            console.log(data);
-        }
-        state.myName = data.name;
-        state.myId = data.id;
-        saveData(state);
-    },
-}
+        },
+        setMyData(state, data) {
+            if (debug) {
+                console.log("Setting new data:")
+                console.log(data);
+            }
+            state.myName = data.name;
+            state.myId = data.id;
+            saveData(state);
+        },
+    }
 })
 
 export { store };
