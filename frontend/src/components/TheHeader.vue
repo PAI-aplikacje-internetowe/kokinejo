@@ -68,7 +68,8 @@
 </template>
 
 <script>
-import {defineComponent} from "vue";
+import {defineComponent, inject} from "vue";
+import {get} from "../fetchUtils";
 
 export default defineComponent({
   name: 'TheHeader',
@@ -76,7 +77,11 @@ export default defineComponent({
     return {
       menuIsActive: false,
       tokenInput: '',
+      endpointAuthMe: '',
     }
+  },
+  created() {
+    this.endpointAuthMe = inject('ENDPOINT_AUTH_ME');
   },
   computed: {
     count() {
@@ -98,6 +103,12 @@ export default defineComponent({
     },
     setToken() {
       this.$store.commit('setToken', this.tokenInput);
+      get(this.endpointAuthMe)
+          .then(response => response.json())
+          .then(data => {
+            this.$store.commit('setMyData', data);
+          })
+          .catch(err => console.err(err))
     },
   }
 })
