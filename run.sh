@@ -66,6 +66,9 @@ build_frontend() {
     echo "Config has changed, building frontend"
     cd ${FRONTEND_DIR}
     npm run build
+  elif [[ ! -d "$FRONTEND_DIR/dist" ]]; then
+    cd ${FRONTEND_DIR}
+    npm run build
   fi
 }
 
