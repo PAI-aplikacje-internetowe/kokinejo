@@ -40,6 +40,7 @@ ALLOW_LIST=${ALLOW_LIST}
 PORT=${BACKEND_PORT}
 EOF
 
+touch .config_has_changed
 }
 
 help() {

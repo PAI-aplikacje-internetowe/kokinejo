@@ -34,13 +34,22 @@ build_backend() {
 
 run_backend() {
   cd ${BACKEND_DIR}
-  ./run.sh
+  if [[ -f ".env" ]]; then
+    BACKEND_PORT=$(grep "PORT" .env | cut -d '=' -f2)
+  else
+    BACKEND_PORT=3000
+  fi
+  ./run.sh -p "$BACKEND_PORT"
 }
 
 build_frontend() {
   if [[ ! -d "$FRONTEND_DIR/node_modules" ]]; then
     cd ${FRONTEND_DIR}
     npm install
+    npm run build
+  elif [ -f ".config_has_changed" ]; then
+    echo "Config has changed, building frontend"
+    cd ${FRONTEND_DIR}
     npm run build
   fi
 }
