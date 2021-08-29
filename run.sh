@@ -27,7 +27,6 @@ check_env_files() {
 
 build_backend() {
   if [[ ! -d "$BACKEND_DIR/node_modules" ]]; then
-    echo "Brak node_modules na froncie"
     cd ${BACKEND_DIR}
     npm install
   fi
@@ -40,7 +39,6 @@ run_backend() {
 
 build_frontend() {
   if [[ ! -d "$FRONTEND_DIR/node_modules" ]]; then
-    echo "Brak node_modules na froncie"
     cd ${FRONTEND_DIR}
     npm install
     npm run build
