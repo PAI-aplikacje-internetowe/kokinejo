@@ -13,11 +13,14 @@ DB_SCHEMA_PATH="$DIR/$DB_SCHEMA"
 DB_FILE="database.db"
 DB_PATH="$BACKEND_ROOT/$DB_FILE"
 
+DEV_MODE=false
+
 usage() {
   echo "./run.sh"
-  echo "    -h --help"
-  echo "    -c --clear         remove database"
-  echo "    -p --port <PORT>   use specific port, default: 3000"
+  echo "    -h"
+  echo "    -c                 remove database"
+  echo "    -d                 run in development mode"
+  echo "    -p                 use specific port, default: 3000"
 }
 
 createDbIfMissing() {
@@ -36,7 +39,11 @@ _clear() {
 
 runBackend() {
   cd ${BACKEND_ROOT}
-  exec npm run start
+  if [ "$DEV_MODE" = true ]; then
+    exec npm run dev
+  else
+    exec npm run start
+  fi
 }
 
 trap ctrl_c INT
@@ -48,27 +55,28 @@ ctrl_c() {
 
 #################################################### MAIN
 
-while [ "$1" != "" ]; do
-  case $1 in
-  -h | --help)
+while getopts ":hcdp:" option; do
+  case $option in
+  h)
     usage
     exit 0
     ;;
-  -c | --clear)
+  c)
     _clear
     exit 0
     ;;
-  -p | --port)
-    PORT="$2"
-    shift
+  d)
+    DEV_MODE=true
     ;;
-  *)
-    echo "ERROR: unknown parameter $1"
+  p)
+    PORT="$OPTARG"
+    ;;
+  \?)
+    echo "ERROR: unknown parameter $OPTARG"
     usage
     exit 1
     ;;
   esac
-  shift
 done
 
 echo "Welcome to Kokinejo backend application"

@@ -8,9 +8,17 @@ DIR=$(pwd)
 BACKEND_DIR=${DIR}/backend
 FRONTEND_DIR=${DIR}/frontend
 
+DEV_MODE=false
+
 
 # --------------------------------------- Functions
 
+help() {
+  echo "Usage: $0 [OPTION...]"
+  echo ""
+  echo "  -d             run in development mode (app reacts to code change)"
+  echo "  -h             gives this help"
+}
 
 check_env_files() {
   if [[ ! -f "$BACKEND_DIR/.env" && ! -f "$FRONTEND_DIR/.env" ]]; then
@@ -39,15 +47,22 @@ run_backend() {
   else
     BACKEND_PORT=3000
   fi
-  ./run.sh -p "$BACKEND_PORT"
+  if [ "$DEV_MODE" = true ]; then
+    echo "running backend in dev mode"
+    ./run.sh -d -p $BACKEND_PORT
+  else
+    ./run.sh -p $BACKEND_PORT
+  fi
 }
 
 build_frontend() {
   if [[ ! -d "$FRONTEND_DIR/node_modules" ]]; then
     cd ${FRONTEND_DIR}
     npm install
-    npm run build
-  elif [ -f ".config_has_changed" ]; then
+  fi
+
+  if [[ -f ".config_has_changed" && "$DEV_MODE" = false ]]; then
+    rm ".config_has_changed"
     echo "Config has changed, building frontend"
     cd ${FRONTEND_DIR}
     npm run build
@@ -61,10 +76,33 @@ run_frontend() {
   else
     FRONTEND_PORT=8080
   fi
-  npm run serve -- --port "$FRONTEND_PORT"
+
+  if [ "$DEV_MODE" = true ]; then
+    exec npm run dev
+  else
+    exec npm run serve -- --port "$FRONTEND_PORT"
+  fi
 }
 
 # --------------------------------------- Main
+
+
+while getopts ":dh" option; do
+  case $option in
+  d)
+    DEV_MODE=true
+    ;;
+  h)
+    help
+    exit 0
+    ;;
+  \?)
+    echo "Unknown option $OPTARG."
+    help
+    exit 1
+    ;;
+  esac
+done
 
 check_env_files
 build_backend
