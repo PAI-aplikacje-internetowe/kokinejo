@@ -4,10 +4,8 @@
 
 `npm install` to install dependencies.
 
-Create `.env` file in the main directory (`/kokinejo/backend/.env`).
-You can use the `.env.template` file and leave only `localhost` part
-or you can add your local ip address in case you want to connect from
-other machine
+In the `.env` file you can set list of allowed origins for CORS
+Useful if you want to connect from another computer in your local network.
 
 ## Running
 
