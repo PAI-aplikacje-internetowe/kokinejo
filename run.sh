@@ -78,9 +78,9 @@ run_frontend() {
   fi
 
   if [ "$DEV_MODE" = true ]; then
-    exec npm run dev
+    npm run dev -- --port "$FRONTEND_PORT"
   else
-    exec npm run serve -- --port "$FRONTEND_PORT"
+    npm run serve -- --port "$FRONTEND_PORT"
   fi
 }
 

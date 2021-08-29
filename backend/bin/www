@@ -94,7 +94,7 @@ function onListening() {
 function initMainSocketNamespace() {
   global.sockets = new Server(server, {
     cors: {
-      origin: process.env.ALLOW_LIST.split(','),
+      origin: process.env.ALLOW_LIST ? process.env.ALLOW_LIST.split(',') : 'http://localhost:8080',
       methods: ['GET', 'POST'],
     },
     serveClient: false,

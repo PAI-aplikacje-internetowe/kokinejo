@@ -40,9 +40,9 @@ _clear() {
 runBackend() {
   cd ${BACKEND_ROOT}
   if [ "$DEV_MODE" = true ]; then
-    exec npm run dev
+    exec npm run dev -- --port "$PORT"
   else
-    exec npm run start
+    exec npm run start -- --port "$PORT"
   fi
 }
 
