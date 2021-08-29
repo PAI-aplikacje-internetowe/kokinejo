@@ -5,7 +5,7 @@ const cors = require('cors');
 const debug = require('debug')('backend:app');
 const config = require('dotenv').config();
 
-const allowList = process.env.ALLOW_LIST.split(',');
+const allowList = process.env.ALLOW_LIST ? process.env.ALLOW_LIST.split(',') : 'http://localhost:8080';
 
 const corsOptions = {
     origin: allowList,
