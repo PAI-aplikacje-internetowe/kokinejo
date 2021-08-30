@@ -35,9 +35,14 @@ class BaseGameController {
 
       sockets.to(gameId).emit('pullState');
 
+      // send player names
+      const players = this.gameUtils.getUserNames(gameId)
+      sockets.to(gameId).emit('userChange', players);
+
       // event handlers
       socket.on('disconnect', () => {
-        socket.to(gameId).emit('userDisconnected', socket.data.user.name);
+        const players = this.gameUtils.getUserNames(gameId)
+        sockets.to(gameId).emit('userChange', players);
         this.gameUtils.playerLeft(gameId, socket.data.user.id);
       })
 
@@ -91,7 +96,9 @@ class BaseGameController {
     try {
       const userId = user.id;
       const data = this.gameUtils.joinGame(gameId, userId);
+      const players = this.gameUtils.getUserNames(gameId);
       this.sockets.emit('pullState');
+      this.sockets.emit('userChange', players);
       res.json(data)
     } catch (e) {
       utils.badRequest(res, e);
@@ -109,7 +116,9 @@ class BaseGameController {
     try {
       const userId = user.id;
       const data = this.gameUtils.leaveGame(gameId, userId);
+      const players = this.gameUtils.getUserNames(gameId);
       this.sockets.emit('pullState');
+      this.sockets.emit('userChange', players);
       res.json(data)
     } catch (e) {
       utils.badRequest(res, e);

@@ -57,6 +57,7 @@ function gameUtilsFactory(gameName) {
         leaveGame: leaveGame,
         playerLeft: playerLeft,
         ready: ready,
+        getUserNames: getUserNames,
     }
 
     // for 3 players game: [user1_id, user2_id, user3_id]
@@ -68,6 +69,11 @@ function gameUtilsFactory(gameName) {
         userIdPlaceholders.push('null');
     }
 
+    /** Return statement with two parameters: 1. gameId 2. "0/1" return all rows
+     * Both parameters are used in WHERE clause: `where tableName.id = <1.gameId> OR <2.>`
+     *
+     * @returns {string}
+     */
     // very ugly but readable and only one query - optimisations
     function availableGamesQuery() {
         switch (info.maxPlayers) {
@@ -75,20 +81,20 @@ function gameUtilsFactory(gameName) {
                 return `SELECT ${gameUtils.tableName}.id, u1.name as u1_name
                         FROM ${gameUtils.tableName}
                                  LEFT JOIN users u1 on u1.id == ${gameUtils.tableName}.user1_id
-                        WHERE ${gameUtils.tableName}.joinable == true`;
+                        WHERE ${gameUtils.tableName}.id = ? OR ?`;
             case(2):
                 return `SELECT ${gameUtils.tableName}.id, u1.name as u1_name, u2.name as u2_name
                         FROM ${gameUtils.tableName}
                                  LEFT JOIN users u1 on u1.id == ${gameUtils.tableName}.user1_id
                                  LEFT JOIN users u2 on u2.id == ${gameUtils.tableName}.user2_id
-                        WHERE ${gameUtils.tableName}.joinable == true`;
+                        WHERE ${gameUtils.tableName}.id = ? OR ?`;
             case(3):
                 return `SELECT ${gameUtils.tableName}.id, u1.name as u1_name, u2.name as u2_name, u3.name as u3_name
                         FROM ${gameUtils.tableName}
                                  LEFT JOIN users u1 on u1.id == ${gameUtils.tableName}.user1_id
                                  LEFT JOIN users u2 on u2.id == ${gameUtils.tableName}.user2_id
                                  LEFT JOIN users u3 on u3.id == ${gameUtils.tableName}.user3_id
-                        WHERE ${gameUtils.tableName}.joinable == true`;
+                    WHERE ${gameUtils.tableName}.id = ? OR ?`;
             case(4):
                 return `SELECT ${gameUtils.tableName}.id,
                                u1.name as u1_name,
@@ -100,7 +106,7 @@ function gameUtilsFactory(gameName) {
                                  LEFT JOIN users u2 on u2.id == ${gameUtils.tableName}.user2_id
                                  LEFT JOIN users u3 on u3.id == ${gameUtils.tableName}.user3_id
                                  LEFT JOIN users u4 on u4.id == ${gameUtils.tableName}.user4_id
-                        WHERE ${gameUtils.tableName}.joinable == true`;
+                        WHERE ${gameUtils.tableName}.id = ? OR ?`;
         }
     }
 
@@ -276,7 +282,7 @@ function gameUtilsFactory(gameName) {
         const stmt = db.prepare(availableGamesQuery())
 
         // todo wl: poprawić czytelność
-        const rows = stmt.all();
+        const rows = stmt.all(0, 1);
         return rows.map(row => {
             let players = []
             for (let i = 1; i <= gameUtils.maxPlayers; i++) {
@@ -309,6 +315,19 @@ function gameUtilsFactory(gameName) {
         for (let i = 0; i < gamesCount; i++) {
             stmt.run(emptyStateString);
         }
+    }
+
+    function getUserNames(gameId) {
+        const stmt = db.prepare(availableGamesQuery())
+        const row = stmt.get(gameId, 0);
+        let players = []
+        for (let i = 1; i <= gameUtils.maxPlayers; i++) {
+            let key = `u${i}_name`;
+            if (row[key] != null) {
+                players.push(row[key]);
+            }
+        }
+        return players.join(', ');
     }
 
     instances.set(gameName, gameUtils);

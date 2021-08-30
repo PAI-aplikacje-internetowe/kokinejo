@@ -5,8 +5,7 @@
         v-if="users"
         class="subtitle"
     >
-      <p>Players: {{ userList }}</p>
-      <p>MyId: {{ this.$store.state.myId }}</p>
+      <p>Players: {{ players }}</p>
     </h2>
     <div class="menu">
       <div class="buttons">
@@ -79,6 +78,7 @@ export default defineComponent({
       moveValue: null,
       field_id: null,
       users: [],
+      players: [],
       messageFromBackend: null,
       socket: null,
 
@@ -204,6 +204,10 @@ export default defineComponent({
       this.socket.on('userDisconnected', async (userName) => {
         await this.getState();
       });
+
+      this.socket.on('userChange', (players) => {
+        this.players = players;
+      })
     },
 
     async leave() {
