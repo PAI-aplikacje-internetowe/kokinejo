@@ -28,19 +28,19 @@
     <div>
       <table>
         <tr>
-          <td id="0" v-on:click="this.clickHandler">{{ values[0] }}</td>
-          <td id="1" v-on:click="this.clickHandler" class="vert">{{ values[1] }}</td>
-          <td id="2" v-on:click="this.clickHandler">{{ values[2] }}</td>
+          <td id="0" class="has-text-centered is-size-1" v-on:click="this.clickHandler">{{ values[0] }}</td>
+          <td id="1" class="has-text-centered is-size-1 vert" v-on:click="this.clickHandler">{{ values[1] }}</td>
+          <td id="2" class="has-text-centered is-size-1" v-on:click="this.clickHandler">{{ values[2] }}</td>
         </tr>
         <tr>
-          <td id="3" v-on:click="this.clickHandler" class="hori">{{ values[3] }}</td>
-          <td id="4" v-on:click="this.clickHandler" class="vert hori">{{ values[4] }}</td>
-          <td id="5" v-on:click="this.clickHandler" class="hori">{{ values[5] }}</td>
+          <td id="3" class="has-text-centered is-size-1 hori" v-on:click="this.clickHandler">{{ values[3] }}</td>
+          <td id="4" class="has-text-centered is-size-1 vert hori" v-on:click="this.clickHandler">{{ values[4] }}</td>
+          <td id="5" class="has-text-centered is-size-1 hori" v-on:click="this.clickHandler">{{ values[5] }}</td>
         </tr>
         <tr>
-          <td id="6" v-on:click="this.clickHandler">{{ values[6] }}</td>
-          <td id="7" v-on:click="this.clickHandler" class="vert">{{ values[7] }}</td>
-          <td id="8" v-on:click="this.clickHandler">{{ values[8] }}</td>
+          <td id="6" class="has-text-centered is-size-1" v-on:click="this.clickHandler">{{ values[6] }}</td>
+          <td id="7" class="has-text-centered is-size-1 vert" v-on:click="this.clickHandler">{{ values[7] }}</td>
+          <td id="8" class="has-text-centered is-size-1" v-on:click="this.clickHandler">{{ values[8] }}</td>
         </tr>
       </table>
     </div>
