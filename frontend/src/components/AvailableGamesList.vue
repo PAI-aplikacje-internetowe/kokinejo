@@ -51,22 +51,31 @@ export default defineComponent({
       e.target.classList.toggle('is-highlighted');
       e.target.classList.toggle('is-primary');
     },
+    loadAvailableGames() {
+      get(this.endpoint)
+          .then(response => response.json())
+          .then(data => {
+            this.gameLists = data.availableGames;
+            this.maxPlayers = data.maxPlayers;
+          })
+          .catch(err => console.error(err));
+      this.timeoutId = setTimeout(this.loadAvailableGames, 1000);
+    }
   },
   data() {
     return {
       gameLists: [],
       maxPlayers: 0,
+      endpoint: '',
+      timeoutId: 0,
     };
   },
   created() {
-    const url = inject(this.endpointKey);
-    get(url)
-        .then(response => response.json())
-        .then(data => {
-          this.gameLists = data.availableGames;
-          this.maxPlayers = data.maxPlayers;
-        })
-        .catch(err => console.error(err));
+    this.endpoint = inject(this.endpointKey);
+    this.loadAvailableGames();
+  },
+  unmounted() {
+    clearTimeout(this.timeoutId);
   }
 });
 
