@@ -101,7 +101,7 @@ Pozwoli to także łatwo przełączyć serwer na osobną bazę SQL, w przypadku 
 Przepływ danych opiera się o komunikację REST.
 Każda gra będzie miała swój prefix w url, np. `/oczko`
 
-#### POST `/login`
+#### POST `/auth/token`
 
 Żądanie
 
@@ -116,12 +116,23 @@ Odpowiedź
 
 ```json
 {
-    "status": "ok",
     "token": "token"
 }
 ```
 
-#### POST `/signup`
+#### GET `/auth/token`
+
+Żądanie z wykorzystaniem HTTP Basic Auth
+
+Odpowiedź
+
+```json
+{
+    "token": "token"
+}
+```
+
+#### POST `/auth/signup`
 
 Żądanie
 
@@ -136,18 +147,40 @@ Odpowiedź
 
 ```json
 {
-    "status": "ok",
     "token": "token"
 }
 ```
 
-#### GET `/logout`
+#### POST `/auth/me`
+
+Żądanie
+
+```json
+{
+    "name": "nazwa",
+    "password": "hasło"
+}
+```
 
 Odpowiedź
 
 ```json
 {
-    "status": "ok"
+    "id": user_id,
+    "name": "nazwa"
+}
+```
+
+#### GET `/auth/me`
+
+Żądanie z wykorzystaniem tokena lub HTTP Basic Auth
+
+Odpowiedź
+
+```json
+{
+    "id": user_id,
+    "name": "nazwa"
 }
 ```
 
@@ -162,7 +195,7 @@ Odpowiedź
     "status": "ok",
     "availableGames": [
        {
-          "id": 1, 
+          "id": 1,
           "userIds": [1, 2, ...]
        },
        {

@@ -6,12 +6,12 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "ky": "^0.28.5",
     "vue": "^3.0.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.2.3",
     "@vue/compiler-sfc": "^3.0.5",
-    "ky": "^0.28.5",
     "bulma": "^0.9.3",
     "bulma-block-list": "^0.5.0",
     "bulma-pageloader": "^0.3.0",

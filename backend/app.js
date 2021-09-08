@@ -79,6 +79,7 @@ app.init = () => {
 }
 
 app.use((req, res, next) => {
+  debug('404 handler...');
   next({
     status: 404,
     message: 'Not Found',
@@ -87,6 +88,7 @@ app.use((req, res, next) => {
 
 // always eeturn json
 app.use((err, req, res, next) => {
+  debug('default handler...');
   // respect err.statusCode
   if (err.statusCode) {
     res.statusCode = err.statusCode;

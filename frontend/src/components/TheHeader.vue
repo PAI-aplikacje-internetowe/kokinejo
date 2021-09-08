@@ -57,9 +57,7 @@
               <a class="button is-dark">
                 Sign up
               </a>
-              <a class="button">
-                Log in
-              </a>
+              <Login />
             </div>
           </div>
         </div>
@@ -71,9 +69,13 @@
 <script>
 import {defineComponent, inject} from "vue";
 import {get} from "../fetchUtils";
+import Login from '../components/Login.vue';
 
 export default defineComponent({
   name: 'TheHeader',
+  components: {
+    Login,
+  },
   data() {
     return {
       menuIsActive: false,
