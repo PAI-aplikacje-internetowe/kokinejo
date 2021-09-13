@@ -1,0 +1,9 @@
+version: "3.7"
+services:
+
+  kokinejo:
+    image: wlepich/kokinejo
+    ports:
+      - "8080:8080"   # frontend
+      - "3000:3000"   # backend
+

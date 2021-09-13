@@ -1,5 +1,13 @@
 # Kokinejo
 
+## Docker
+
+Instead of reading everything below you can just use docker or docker-compose.
+Docker image is `wlepich/kokinejo`.
+
+In the main directory there is a `docker-compose.yml` file, so you can
+run it by typing `docker-compose up`.
+
 ## Configuration 
 
 Run `create_config.sh` once. It will create .env files in both

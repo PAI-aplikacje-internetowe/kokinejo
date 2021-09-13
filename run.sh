@@ -9,6 +9,7 @@ BACKEND_DIR=${DIR}/backend
 FRONTEND_DIR=${DIR}/frontend
 
 DEV_MODE=false
+DONT_RUN=false
 
 
 # --------------------------------------- Functions
@@ -18,6 +19,7 @@ help() {
   echo ""
   echo "  -d             run in development mode (app reacts to code change)"
   echo "  -h             gives this help"
+  echo "  -b             only builds backend and frontend"
 }
 
 check_env_files() {
@@ -90,7 +92,7 @@ run_frontend() {
 # --------------------------------------- Main
 
 
-while getopts ":dh" option; do
+while getopts ":dhb" option; do
   case $option in
   d)
     DEV_MODE=true
@@ -98,6 +100,9 @@ while getopts ":dh" option; do
   h)
     help
     exit 0
+    ;;
+  b)
+    DONT_RUN=true
     ;;
   \?)
     echo "Unknown option $OPTARG."
@@ -110,4 +115,9 @@ done
 check_env_files
 build_backend
 build_frontend
+
+if [ "$DONT_RUN" = true ]; then
+  exit 0
+fi
+
 (trap 'kill 0' SIGINT; run_backend & run_frontend)
