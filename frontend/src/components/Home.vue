@@ -34,8 +34,8 @@ export default defineComponent({
           name: 'Tic-tac-toe',
           routerName: 'kik',
           description: 'Simple singleplayer game',
-          picture: "/public/tic-tac-toe.png",
-        },
+          picture: "/tic-tac-toe.png",
+          },
         {
           name: 'Crazy eights',
           routerName: 'crazy-eights',
