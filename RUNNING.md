@@ -11,3 +11,10 @@ add your local IP address to CORS allow list.
 ## Running 
 
 For running please use the `run.sh` script.
+
+## Requirements
+
+In order to run the application you will need:
+
+- npm, node
+- sqlite3
