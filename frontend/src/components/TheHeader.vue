@@ -34,32 +34,39 @@
           >
             {{ count }}
           </a>
-
-          <div class="field has-addons navbar-item">
-            <div class="control">
-              <input class="input" type="text" :placeholder="loadToken" v-model="tokenInput">
-            </div>
-            <div class="control">
-              <a
-                  class="button is-info"
-                  @click="setToken"
-              >
-                Set token
-              </a>
-            </div>
-          </div>
-          <p class="navbar-item">Nick: {{ myName }}</p>
         </div>
 
         <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons">
-              <a class="button is-dark">
-                Sign up
+
+          <template v-if="isLoggedIn">
+            <p class="navbar-item">Nick: {{ myName }}</p>
+            <div class="buttons navbar-item">
+              <a class="button is-dark"
+                 @click="logOut"
+              >
+                Log out
               </a>
-              <Login />
             </div>
-          </div>
+          </template>
+
+          <template v-else>
+            <div class="navbar-item">
+              <div class="buttons">
+                <a class="button is-dark"
+                   @click="goToSignup"
+                >
+                  Sign up
+                </a>
+                <a class="button"
+                   @click="goToLogin"
+                >
+                  Log in
+                </a>
+                <!--              <Login />-->
+              </div>
+            </div>
+          </template>
+
         </div>
       </div>
     </nav>
@@ -70,6 +77,7 @@
 import {defineComponent, inject} from "vue";
 import {get} from "../fetchUtils";
 import Login from '../components/Login.vue';
+import {useRouter} from "vue-router";
 
 export default defineComponent({
   name: 'TheHeader',
@@ -81,18 +89,21 @@ export default defineComponent({
       menuIsActive: false,
       tokenInput: '',
       endpointAuthMe: '',
+      endpointLogOut: '',
+      router: undefined,
     }
   },
   created() {
     this.endpointAuthMe = inject('ENDPOINT_AUTH_ME');
+    this.endpointLogOut = inject('ENDPOINT_LOGOUT');
+    this.router = useRouter();
   },
   computed: {
     count() {
       return this.$store.state.count;
     },
-    loadToken() {
-      const token = this.$store.state.token;
-      return token || 'Token';
+    isLoggedIn() {
+      return !!this.$store.state.token;
     },
     myName() {
       const userName = this.$store.state.myName;
@@ -108,14 +119,19 @@ export default defineComponent({
     commitIncrement() {
       this.$store.commit('increment');
     },
-    setToken() {
-      this.$store.commit('setToken', this.tokenInput);
-      get(this.endpointAuthMe)
-          .then(response => response.json())
-          .then(data => {
-            this.$store.commit('setMyData', data);
-          })
-          .catch(err => console.error(err))
+    goToLogin() {
+      this.router.push('/auth/login');
+    },
+    goToSignup() {
+      this.router.push('/auth/signup');
+    },
+
+    async logOut() {
+      const response = await get(this.endpointLogOut);
+      if (response.ok) {
+        this.$store.commit('logout');
+        await this.router.push('/');
+      }
     },
   }
 })

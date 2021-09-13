@@ -4,7 +4,7 @@
 
       <div class="card-image">
         <figure class="image is-4by3">
-          <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
+          <img :src="picture" alt="Placeholder image" style="overflow: hidden">
         </figure>
       </div>
 
@@ -15,9 +15,8 @@
           </div>
         </div>
 
-        <div class="content">
-          Here is a short description of the game.
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        <div class="content" style="height: 2rem">
+          <p>{{ description }}</p>
         </div>
       </div>
 
@@ -38,6 +37,8 @@
 
       <GameInfoModal
           :active="infoIsActive"
+          :gameName="gameName"
+          :description="description"
           @info-close="toggleInfo"
       />
     </div>
@@ -51,10 +52,12 @@ import GameInfoModal from "./GameInfoModal.vue";
 export default defineComponent({
   name: 'GameTile',
   components: {GameInfoModal},
-  props: ['gameName', 'playRoute'],
+  props: ['gameName', 'playRoute', 'picture', 'description'],
   data() {
     return {
       infoIsActive: false,
+      picture: this.$props.picture || "https://bulma.io/images/placeholders/1280x960.png",
+      description: this.$props.description || "Here is a short description of the game. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     }
   },
   methods: {

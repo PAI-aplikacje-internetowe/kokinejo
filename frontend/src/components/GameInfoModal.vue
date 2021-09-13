@@ -3,16 +3,12 @@
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">Modal title</p>
+        <p class="modal-card-title">{{ gameName }}</p>
         <button class="delete" aria-label="close" @click="closeMe"></button>
       </header>
       <section class="modal-card-body">
-        <!-- Content ... -->
+        {{ description }}
       </section>
-      <footer class="modal-card-foot">
-        <button class="button is-success">Save changes</button>
-        <button class="button">Cancel</button>
-      </footer>
     </div>
   </div>
 
@@ -23,7 +19,7 @@ import {defineComponent} from "vue";
 
 export default defineComponent({
   name: 'GameInfoModal',
-  props: ['active'],
+  props: ['active', 'gameName', 'description'],
   methods: {
     closeMe() {
       this.$emit('info-close');

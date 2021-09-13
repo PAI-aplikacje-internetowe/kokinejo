@@ -62,7 +62,6 @@ export default {
 
     return {
       token,
-      state,
       modalOpen,
       login,
       state,

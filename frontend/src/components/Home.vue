@@ -9,6 +9,8 @@
           <GameTile
               :game-name="game.name"
               :play-route="game.routerName"
+              :picture="game.picture"
+              :description="game.description"
           />
         </template>
       </div>
@@ -32,6 +34,7 @@ export default defineComponent({
           name: 'Tic-tac-toe',
           routerName: 'kik',
           description: 'Simple singleplayer game',
+          picture: "/public/tic-tac-toe.png",
         },
         {
           name: 'Crazy eights',

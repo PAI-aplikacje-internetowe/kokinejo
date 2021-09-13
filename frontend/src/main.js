@@ -7,6 +7,8 @@ import NotFound from "./components/NotFound.vue";
 import { createRouter, createWebHashHistory } from 'vue-router';
 import {store} from "./store";
 import AvailableGamesList from "./components/AvailableGamesList.vue";
+import LoginComponent from "./components/LoginComponent.vue";
+import SignUpComponent from "./components/SignUpComponent.vue";
 
 const app = createApp(App)
 
@@ -15,6 +17,9 @@ const url = import.meta.env.VITE_ENDPOINT || `http://${window.location.hostname}
 app.provide('ENDPOINT_INDEX', `${url}/`);
 app.provide('ENDPOINT_AUTH', `${url}/auth`);
 app.provide('ENDPOINT_AUTH_ME', `${url}/auth/me`);
+app.provide('ENDPOINT_TOKEN', `${url}/auth/token`);
+app.provide('ENDPOINT_SIGNUP', `${url}/auth/signup`);
+app.provide('ENDPOINT_LOGOUT', `${url}/auth/logout`);
 
 app.provide('ENDPOINT_CRAZY8', `${url}/crazy8`);
 app.provide('ENDPOINT_CRAZY8_AVAIL', `${url}/crazy8/available_games`);
@@ -54,6 +59,16 @@ const routes= [
             gameName: 'crazy eights',
             endpointKey: 'ENDPOINT_CRAZY8_AVAIL',
         },
+    },
+    {
+        path: '/auth/login',
+        name: 'login',
+        component: LoginComponent,
+    },
+    {
+        path: '/auth/signup',
+        name: 'signup',
+        component: SignUpComponent,
     },
     {
         path: '/:pathMatch(.*)*',
