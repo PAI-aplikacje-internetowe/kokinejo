@@ -1,5 +1,5 @@
-.gitignore
-database.db
+**/.gitignore
+**/database.db
 db_schema.png
 
 **/node_modules
